@@ -1,0 +1,48 @@
+<!--<ScrollView-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="wrap_content">-->
+
+<RelativeLayout
+    android:id="@+id/ingredient_card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Ingredient description -->
+    <TextView
+        android:id="@+id/ingredient_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        android:textStyle="normal"/>
+
+    <!-- Ingredient measure and quantity -->
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ingredient_description"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/ingredient_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textStyle="normal"/>
+
+        <TextView
+            android:id="@+id/ingredient_measure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:textAlignment="center"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</RelativeLayout>
+    <!--</ScrollView>-->
