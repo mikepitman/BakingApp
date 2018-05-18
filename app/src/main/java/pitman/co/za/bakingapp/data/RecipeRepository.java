@@ -50,6 +50,7 @@ public class RecipeRepository {
             new insertIngredientsAsyncTask(mRecipeDao).execute(recipe.getIngredients());
             new insertRecipeStepsAsyncTask(mRecipeDao).execute(recipe.getRecipeSteps());
         }
+        Log.d(LOG_TAG, "Recipe and sub-objects added to database");
     }
 
     private static class insertRecipeAsyncTask extends AsyncTask<Recipe, Void, Void> {

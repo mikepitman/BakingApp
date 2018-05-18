@@ -11,8 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -72,6 +70,7 @@ public class MainActivityFragment extends Fragment {
 
         // todo: adapter should be initiated with list of recipes pulled from database
         mAdapter = new RecipeCardAdapter(new ArrayList<Recipe>());
+//        mAdapter = new RecipeCardAdapter(mRecipeViewModel.getAllRecipes().getValue());
 
         // https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#13
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
@@ -92,6 +91,7 @@ public class MainActivityFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         mRecipeRecyclerView = (RecyclerView) view.findViewById(R.id.recipe_cards_rv);
         mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecipeRecyclerView.setAdapter(mAdapter);
 
         if (isNetworkAvailable()) {
             new FetchRecipesTask(this).execute();
@@ -136,22 +136,7 @@ public class MainActivityFragment extends Fragment {
 
     // called from async task that retrieves recipe data from internet, to populate adapter
     public void generateRecipeAdapterWithData(ArrayList<Recipe> retrievedRecipes) {
-
-//        for (Recipe recipe : retrievedRecipes) {
-            mRecipeViewModel.insert(retrievedRecipes);
-//        }
-
-//        if (mAdapter == null) {
-//            mAdapter = new RecipeCardAdapter(retrievedRecipes);
-//            mRecipeRecyclerView.setAdapter(mAdapter);
-//        } else {
-//            mAdapter.swapData(retrievedRecipes);
-//        }
-
-        // call to method to update database in background
-//        if (retrievedRecipes != null) {
-//            updateDatabaseWithRetrievedRecipes(retrievedRecipes);
-//        }
+        mRecipeViewModel.insert(retrievedRecipes);
     }
 
 //    private void populateRecipesAdapterWithOfflineData() {
@@ -232,7 +217,6 @@ public class MainActivityFragment extends Fragment {
 
         private RecipeCardAdapter(List<Recipe> recipeListing) {
             mRecipeListing = recipeListing;
-//            Log.d(LOG_TAG, "recipeListing size: " + mRecipeListing.size());
         }
 
         @Override
@@ -287,50 +271,5 @@ public class MainActivityFragment extends Fragment {
             this.mRecipe = recipe;
             this.recipeListTextView.setText(mRecipe.getRecipeName());
         }
-    }
-
-    // Example code from Sunshine II app, and implementation guidance from https://github.com/Vane101/Vmovie
-//    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//        Log.d(LOG_TAG, "OnCreateLoader called, to return new Loader");
-        Uri recipeListingUri = RecipesContract.getRecipesList();
-        return new CursorLoader(getActivity(),
-                recipeListingUri,
-                null,
-                null,
-                null,
-                null);
-    }
-
-    // Commented out while getting app running again using room
-//    @Override
-//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-//        ArrayList<Recipe> recipeList = new ArrayList<>();
-//        if (data.getCount() > 0) {//check if cursor not empty
-//            data.moveToFirst();
-//            do {
-//                Recipe recipe = new Recipe();
-//                recipe.setRecipeId(data.getString(1));
-//                recipe.setRecipeName(data.getString(2));
-//
-//                Log.d(LOG_TAG, "loaded from database! "
-//                        + recipe.getRecipeId() + "  "
-//                        + recipe.getRecipeName());
-//
-//                recipeList.add(recipe);
-//                data.moveToNext();
-//            } while (!data.isAfterLast());
-//        } else {
-//            // Cursor was empty - no saved recipes
-//            appMessageToast("There are no saved recipes available!");
-//        }
-//
-//        mRecipeListData = recipeList;
-//        generateRecipeAdapterWithData(mRecipeListData);
-//    }
-
-//    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
     }
 }

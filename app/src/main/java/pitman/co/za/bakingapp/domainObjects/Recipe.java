@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * Modified to utilise 'room', a hibernate-type database abstraction tool
  */
 @Entity(tableName = "recipe")
-public class Recipe {
+public class Recipe  {
 
     @NonNull
     @ColumnInfo(name = "recipeId")
