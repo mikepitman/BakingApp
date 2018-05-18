@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import pitman.co.za.bakingapp.domainObjects.Ingredient;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
@@ -32,5 +33,30 @@ public abstract class RecipeRoomDatabase extends RoomDatabase {
             }
         }
         return INSTANCE;
+    }
+
+    private static class PopulateDbAsync extends AsyncTask<Void, Void, Void> {
+
+        private final RecipeDao mDao;
+
+        PopulateDbAsync(RecipeRoomDatabase db) {
+            mDao = db.recipeDao();
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            // Start the app with a clean database every time.
+            // Not needed if you only populate on creation.
+//            mDao.deleteAll();
+
+//            Word word = new Word("Hello");
+//            mDao.insert(word);
+//            word = new Word("World");
+//            mDao.insert(word);
+
+            // todo: put the database populating code in here
+
+            return null;
+        }
     }
 }

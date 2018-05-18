@@ -50,12 +50,12 @@ public class RecipeStepActivityFragment extends Fragment {
 
     public RecipeStepActivityFragment() { Log.d(LOG_TAG, "RecipeStepActivityFragment constructor called"); }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("selectedRecipe", mSelectedRecipe);
-        outState.putInt("selectedStep", mRecipeStepIndex);
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putParcelable("selectedRecipe", mSelectedRecipe);
+//        outState.putInt("selectedStep", mRecipeStepIndex);
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,7 +88,7 @@ public class RecipeStepActivityFragment extends Fragment {
 
         RecipeStep selectedStep = mSelectedRecipe.getRecipeSteps().get(mRecipeStepIndex);
         Log.d(LOG_TAG, "selectedRecipe is null? " + (mSelectedRecipe == null) + ". Selected step ID: " + mRecipeStepIndex);
-        Log.d(LOG_TAG, "" + selectedStep.getShortDesciption() + "  " + selectedStep.getVideoUrl());
+        Log.d(LOG_TAG, "" + selectedStep.getShortDescription() + "  " + selectedStep.getVideoUrl());
 
         TextView longDescriptionView = (TextView) rootView.findViewById(R.id.recipe_instructions);
         longDescriptionView.setText(selectedStep.getDescription());

@@ -1,18 +1,16 @@
 package pitman.co.za.bakingapp;
 
 import android.app.Activity;
-import android.content.ContentProviderOperation;
-import android.content.ContentResolver;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.content.OperationApplicationException;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.RemoteException;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,23 +25,23 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import pitman.co.za.bakingapp.data.RecipeViewModel;
 import pitman.co.za.bakingapp.data.RecipesContract;
-import pitman.co.za.bakingapp.domainObjects.Ingredient;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
-import pitman.co.za.bakingapp.domainObjects.RecipeStep;
 import pitman.co.za.bakingapp.utility.FetchRecipesTask;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+//public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class MainActivityFragment extends Fragment {
 
     private static String LOG_TAG = MainActivityFragment.class.getSimpleName();
     private Context mContext;
     private ArrayList<Recipe> mRecipeListData;
     private RecyclerView mRecipeRecyclerView;
     private Callbacks mCallbacks;
-    //    public View view;
+    private RecipeViewModel mRecipeViewModel;
     public static RecipeCardAdapter mAdapter;
 
     public MainActivityFragment() {
@@ -71,6 +69,19 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
         super.onCreate(savedInstanceState);
 //        this.setHasOptionsMenu(true);
         Log.d(LOG_TAG, "2. onCreate()");
+
+        // todo: adapter should be initiated with list of recipes pulled from database
+        mAdapter = new RecipeCardAdapter(new ArrayList<Recipe>());
+
+        // https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#13
+        mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mRecipeViewModel.getAllRecipes().observe(this, new Observer<List<Recipe>>() {
+            @Override
+            public void onChanged(@Nullable final List<Recipe> recipes) {
+                mAdapter.swapData(recipes);
+            }
+        });
+        Log.d(LOG_TAG, "onChanged() set on mRecipeViewModel");
     }
 
     @Override
@@ -93,7 +104,8 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
             Log.d(LOG_TAG, "retrieving from database using uri: " + recipesListing);
             Cursor cursor = getActivity().getContentResolver().query(recipesListing, null, null, null, null);
             if (cursor != null) {
-                getLoaderManager().restartLoader(1, null, MainActivityFragment.this);
+                // commented out while getting app running again using room
+//                getLoaderManager().restartLoader(1, null, MainActivityFragment.this);
                 cursor.close();
             }
         }
@@ -123,82 +135,23 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     // called from async task that retrieves recipe data from internet, to populate adapter
-    public void generateRecipeAdapterWithData(List<Recipe> retrievedRecipes) {
-        if (mAdapter == null) {
-            mAdapter = new RecipeCardAdapter(retrievedRecipes);
-            mRecipeRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.swapData(retrievedRecipes);
-        }
+    public void generateRecipeAdapterWithData(ArrayList<Recipe> retrievedRecipes) {
+
+//        for (Recipe recipe : retrievedRecipes) {
+            mRecipeViewModel.insert(retrievedRecipes);
+//        }
+
+//        if (mAdapter == null) {
+//            mAdapter = new RecipeCardAdapter(retrievedRecipes);
+//            mRecipeRecyclerView.setAdapter(mAdapter);
+//        } else {
+//            mAdapter.swapData(retrievedRecipes);
+//        }
 
         // call to method to update database in background
 //        if (retrievedRecipes != null) {
 //            updateDatabaseWithRetrievedRecipes(retrievedRecipes);
 //        }
-    }
-
-    /* Use ContentProviderOperation object to save the recipe to database
-    https://stuff.mit.edu/afs/sipb/project/android/docs/reference/android/provider/ContactsContract.RawContacts.html
-    https://www.grokkingandroid.com/better-performance-with-contentprovideroperation/
-    */
-    // todo: this needs logic to only insert if not already present in the database
-    public void updateDatabaseWithRetrievedRecipes(List<Recipe> retrievedRecipes) {
-        ContentResolver resolver = getActivity().getContentResolver();
-
-        for (Recipe recipe : retrievedRecipes) {
-
-            ArrayList<ContentProviderOperation> ops = new ArrayList<ContentProviderOperation>();
-
-            int rawRecipeInsertIndex = ops.size();
-            ops.add(ContentProviderOperation.newInsert(RecipesContract.RecipeTable.CONTENT_URI)
-                    .withValue(RecipesContract.RecipeTable.COLUMN_RECIPE_ID, recipe.getRecipeId())
-                    .withValue(RecipesContract.RecipeTable.COLUMN_RECIPE_NAME, recipe.getRecipeName())
-                    .build());
-
-            for (RecipeStep step : recipe.getRecipeSteps()) {
-                ops.add(ContentProviderOperation.newInsert(RecipesContract.RecipeStepTable.CONTENT_URI)
-                        .withValueBackReference(RecipesContract.RecipeStepTable.COLUMN_STEP_RECIPE_KEY, rawRecipeInsertIndex)
-                        .withValue(RecipesContract.RecipeStepTable.COLUMN_STEP_DESCRIPTION, step.getDescription())
-                        .withValue(RecipesContract.RecipeStepTable.COLUMN_STEP_SHORT_DESCRIPTION, step.getShortDesciption())
-                        .withValue(RecipesContract.RecipeStepTable.COLUMN_STEP_VIDEO_URL, step.getVideoUrl())
-                        .withValue(RecipesContract.RecipeStepTable.COLUMN_STEP_THUMBNAIL_URL, step.getThumbnailUrl())
-                        .build());
-            }
-
-            for (Ingredient ingredient : recipe.getIngredients()) {
-                ops.add(ContentProviderOperation.newInsert(RecipesContract.RecipeIngredientTable.CONTENT_URI)
-                        .withValueBackReference(RecipesContract.RecipeIngredientTable.COLUMN_INGREDIENT_RECIPE_KEY, rawRecipeInsertIndex)
-                        .withValue(RecipesContract.RecipeIngredientTable.COLUMN_INGREDIENT_QUANTITY, ingredient.getQuantity())
-                        .withValue(RecipesContract.RecipeIngredientTable.COLUMN_INGREDIENT_NAME, ingredient.getIngredient())
-                        .withValue(RecipesContract.RecipeIngredientTable.COLUMN_INGREDIENT_MEASURE, ingredient.getMeasure())
-                        .build());
-            }
-
-            try {
-                resolver.applyBatch(RecipesContract.CONTENT_AUTHORITY, ops);
-                Log.d(LOG_TAG, "resolver.applyBatch() run by this point");
-            } catch (RemoteException e) {
-                Log.d(LOG_TAG, e.getMessage());
-            } catch (OperationApplicationException e) {
-                Log.d(LOG_TAG, e.getMessage());
-            }
-
-//            ArrayList<ContentValues> contentValuesArrayList = new ArrayList<>();
-//
-//            ContentValues recipeContentValuesObject = new ContentValues();
-//            recipeContentValuesObject.put(RecipesContract.RecipeTable.COLUMN_RECIPE_ID, recipe.getRecipeId());
-//            recipeContentValuesObject.put(RecipesContract.RecipeTable.COLUMN_RECIPE_NAME, recipe.getRecipeName());
-//            contentValuesArrayList.add(recipeContentValuesObject);
-
-            // todo: check if recipe exists already, and don't add it if it does
-//            Log.d(LOG_TAG, "adding recipe to database");
-//            Uri uri = resolver.insert(RecipesContract.RecipeTable.CONTENT_URI, recipeContentValuesObject);
-//            if (uri == null) {
-//                Log.d(LOG_TAG, "Uri was null - this shouldn't really happen(?)");
-//            } else {
-//                Log.d(LOG_TAG, "Recipe with id " + recipe.getRecipeName() + " was added to database. " + uri);
-//            }
-        }
     }
 
 //    private void populateRecipesAdapterWithOfflineData() {
@@ -337,7 +290,7 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
     }
 
     // Example code from Sunshine II app, and implementation guidance from https://github.com/Vane101/Vmovie
-    @Override
+//    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 //        Log.d(LOG_TAG, "OnCreateLoader called, to return new Loader");
         Uri recipeListingUri = RecipesContract.getRecipesList();
@@ -349,33 +302,34 @@ public class MainActivityFragment extends Fragment implements LoaderManager.Load
                 null);
     }
 
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        ArrayList<Recipe> recipeList = new ArrayList<>();
-        if (data.getCount() > 0) {//check if cursor not empty
-            data.moveToFirst();
-            do {
-                Recipe recipe = new Recipe();
-                recipe.setRecipeId(data.getString(1));
-                recipe.setRecipeName(data.getString(2));
+    // Commented out while getting app running again using room
+//    @Override
+//    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+//        ArrayList<Recipe> recipeList = new ArrayList<>();
+//        if (data.getCount() > 0) {//check if cursor not empty
+//            data.moveToFirst();
+//            do {
+//                Recipe recipe = new Recipe();
+//                recipe.setRecipeId(data.getString(1));
+//                recipe.setRecipeName(data.getString(2));
+//
+//                Log.d(LOG_TAG, "loaded from database! "
+//                        + recipe.getRecipeId() + "  "
+//                        + recipe.getRecipeName());
+//
+//                recipeList.add(recipe);
+//                data.moveToNext();
+//            } while (!data.isAfterLast());
+//        } else {
+//            // Cursor was empty - no saved recipes
+//            appMessageToast("There are no saved recipes available!");
+//        }
+//
+//        mRecipeListData = recipeList;
+//        generateRecipeAdapterWithData(mRecipeListData);
+//    }
 
-                Log.d(LOG_TAG, "loaded from database! "
-                        + recipe.getRecipeId() + "  "
-                        + recipe.getRecipeName());
-
-                recipeList.add(recipe);
-                data.moveToNext();
-            } while (!data.isAfterLast());
-        } else {
-            // Cursor was empty - no saved recipes
-            appMessageToast("There are no saved recipes available!");
-        }
-
-        mRecipeListData = recipeList;
-        generateRecipeAdapterWithData(mRecipeListData);
-    }
-
-    @Override
+//    @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
     }

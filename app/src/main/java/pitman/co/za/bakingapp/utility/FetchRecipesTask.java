@@ -147,16 +147,16 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
         final String JSON_STEP_VIDEO_URL = "videoURL";
         final String JSON_STEP_THUMBNAIL_URL = "thumbnailURL";
 
-//        JSONObject jsonObject = new JSONObject(jsonRecipes);
-        JSONArray recipesArray = new JSONArray(jsonRecipes);//.getJSONArray("");
+        JSONArray recipesArray = new JSONArray(jsonRecipes);
 
         ArrayList<Recipe> parsedRecipes = new ArrayList<>();
         for (int i = 0; i < recipesArray.length(); i++) {
-            Recipe recipe = new Recipe();
 
             JSONObject recipe_obj = recipesArray.getJSONObject(i);
-            recipe.setRecipeId(recipe_obj.getString(JSON_RECIPE_ID));
-            recipe.setRecipeName(recipe_obj.getString(JSON_RECIPE_NAME));
+            Recipe recipe = new Recipe(
+                    recipe_obj.getString(JSON_RECIPE_ID),
+                    recipe_obj.getString(JSON_RECIPE_NAME));
+
             Log.d(LOG_TAG, "id, name: " + recipe.getRecipeId() + ", " + recipe.getRecipeName());
 
             JSONArray ingredientsArray = recipe_obj.getJSONArray(JSON_RECIPE_INGREDIENTS_ARRAY);
@@ -164,17 +164,16 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
                 ArrayList<Ingredient> ingredientArrayList = new ArrayList<>();
 
                 for (int j = 0; j < ingredientsArray.length(); j++) {
-                    Ingredient ingredient = new Ingredient();
-
                     JSONObject ingredient_obj = ingredientsArray.getJSONObject(j);
-                    ingredient.setMeasure(ingredient_obj.getString(JSON_INGREDIENT_MEASURE));
-                    ingredient.setQuantity(ingredient_obj.getString(JSON_INGREDIENT_QUANTITY));
-                    ingredient.setIngredient(ingredient_obj.getString(JSON_INGREDIENT_INGREDIENT));
-
+                    Ingredient ingredient = new Ingredient(
+                            recipe.getRecipeName(),
+                            ingredient_obj.getString(JSON_INGREDIENT_QUANTITY),
+                            ingredient_obj.getString(JSON_INGREDIENT_MEASURE),
+                            ingredient_obj.getString(JSON_INGREDIENT_INGREDIENT));
                     ingredientArrayList.add(ingredient);
                 }
                 recipe.setIngredients(ingredientArrayList);
-                Log.d(LOG_TAG, "number of ingredients " + recipe.getIngredients().size());
+//                Log.d(LOG_TAG, "number of ingredients " + recipe.getIngredients().size());
             }
 
             JSONArray recipeStepsArray = recipe_obj.getJSONArray(JSON_RECIPE_STEPS_ARRAY);
@@ -182,19 +181,19 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
                 ArrayList<RecipeStep> stepArrayList = new ArrayList<>();
 
                 for (int k = 0; k < recipeStepsArray.length(); k++) {
-                    RecipeStep recipeStep = new RecipeStep();
-
                     JSONObject recipeStep_obj = recipeStepsArray.getJSONObject(k);
-                    recipeStep.setId(recipeStep_obj.getString(JSON_STEP_ID));
-                    recipeStep.setShortDesciption(recipeStep_obj.getString(JSON_STEP_SHORT_DESC));
-                    recipeStep.setDescription(recipeStep_obj.getString(JSON_STEP_DESCRIPTION));
-                    recipeStep.setVideoUrl(recipeStep_obj.getString(JSON_STEP_VIDEO_URL));
-                    recipeStep.setThumbnailUrl(recipeStep_obj.getString(JSON_STEP_THUMBNAIL_URL));
+                    RecipeStep recipeStep = new RecipeStep(
+                            recipe.getRecipeName(),
+                            recipeStep_obj.getString(JSON_STEP_SHORT_DESC),
+                            recipeStep_obj.getString(JSON_STEP_ID),
+                            recipeStep_obj.getString(JSON_STEP_DESCRIPTION),
+                            recipeStep_obj.getString(JSON_STEP_VIDEO_URL),
+                            recipeStep_obj.getString(JSON_STEP_THUMBNAIL_URL));
 
                     stepArrayList.add(recipeStep);
                 }
                 recipe.setRecipeSteps(stepArrayList);
-                Log.d(LOG_TAG, "number of steps " + recipe.getRecipeSteps().size());
+//                Log.d(LOG_TAG, "number of steps " + recipe.getRecipeSteps().size());
             }
             parsedRecipes.add(recipe);
         }

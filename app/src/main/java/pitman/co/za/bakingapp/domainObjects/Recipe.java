@@ -2,11 +2,11 @@ package pitman.co.za.bakingapp.domainObjects;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Michael on 2018/01/24.
@@ -15,18 +15,19 @@ import java.util.List;
 @Entity(tableName = "recipe")
 public class Recipe {
 
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
     @NonNull
     @ColumnInfo(name = "recipeId")
     private String recipeId;
 
+    @PrimaryKey
     @NonNull
     @ColumnInfo(name = "recipeName")
     private String recipeName;
-    private ArrayList<Ingredient> mIngredients;
-    private ArrayList<RecipeStep> mRecipeSteps;
+
+    @Ignore
+    private ArrayList<Ingredient> ingredients;
+    @Ignore
+    private ArrayList<RecipeStep> recipeSteps;
 
     public Recipe(@NonNull String recipeId, @NonNull String recipeName) {
         this.recipeId = recipeId;
@@ -43,19 +44,19 @@ public class Recipe {
         return recipeName;
     }
 
-    public List<Ingredient> getIngredients() {
-        return mIngredients;
+    public ArrayList<Ingredient> getIngredients() {
+        return ingredients;
     }
 
     public void setIngredients(ArrayList<Ingredient> ingredients) {
-        mIngredients = ingredients;
+        this.ingredients = ingredients;
     }
 
-    public List<RecipeStep> getRecipeSteps() {
-        return mRecipeSteps;
+    public ArrayList<RecipeStep> getRecipeSteps() {
+        return recipeSteps;
     }
 
     public void setRecipeSteps(ArrayList<RecipeStep> recipeSteps) {
-        mRecipeSteps = recipeSteps;
+        this.recipeSteps = recipeSteps;
     }
 }

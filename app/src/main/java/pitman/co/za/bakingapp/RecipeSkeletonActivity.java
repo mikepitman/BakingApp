@@ -50,14 +50,14 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
 
         if (selectedItemPosition == 0) {        // View recipe ingredients
             Intent recipeIngredientsIntent = new Intent(this, RecipeIngredientsActivity.class);
-            recipeIngredientsIntent.putExtra("recipe", selectedRecipe);
+//            recipeIngredientsIntent.putExtra("recipe", selectedRecipe);
             startActivity(recipeIngredientsIntent);
 
         } else {                                // View selected recipe step
 //            RecipeStep selectedRecipeStep = selectedRecipe.getRecipeSteps().get(selectedItemPosition - 1);
 
             Intent recipeStepIntent = new Intent(this, RecipeStepActivity.class);
-            recipeStepIntent.putExtra("recipe", selectedRecipe);
+//            recipeStepIntent.putExtra("recipe", selectedRecipe);
             recipeStepIntent.putExtra("selectedStep", (selectedItemPosition - 1));  // ID of selected step
             startActivity(recipeStepIntent);
         }

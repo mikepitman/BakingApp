@@ -10,6 +10,7 @@ import android.util.Log;
 
 import pitman.co.za.bakingapp.domainObjects.Recipe;
 
+
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callbacks {
 
     private String LOG_TAG = MainActivityFragment.class.getSimpleName();
@@ -36,15 +37,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             fragment = new MainActivityFragment();
             fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
-
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        /*fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
     }
 
     // Method called (via callbacks) from MainActivityFragment
@@ -57,13 +49,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             Log.d(LOG_TAG, "preparing to view recipe on phone");
 
             Intent recipeDetailIntent = new Intent(this, RecipeSkeletonActivity.class);
-            recipeDetailIntent.putExtra("selectedRecipe", recipe);
+//            recipeDetailIntent.putExtra("selectedRecipe", recipe);
             startActivity(recipeDetailIntent);
         } else {                                                                // tablet
 
             Log.d(LOG_TAG, "preparing to view recipe on tablet");
             Bundle arguments = new Bundle();
-            arguments.putParcelable("selectedRecipe", recipe);
+//            arguments.putParcelable("selectedRecipe", recipe);
 
 //            Fragment recipeDetailActivity = new RecipeSkeletonActivityFragment();
 //            recipeDetailActivity.setArguments(arguments);

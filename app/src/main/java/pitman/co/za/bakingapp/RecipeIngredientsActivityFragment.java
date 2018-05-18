@@ -33,11 +33,11 @@ public class RecipeIngredientsActivityFragment extends Fragment {
         Log.d(LOG_TAG, "RecipeIngredientsActivityFragment() constructor called");
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("selectedRecipe", selectedRecipe);
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putParcelable("selectedRecipe", selectedRecipe);
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
