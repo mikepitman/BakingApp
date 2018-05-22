@@ -28,19 +28,27 @@ public class RecipeRepository {
         mRecipeDao = db.recipeDao();
         mAllRecipes = mRecipeDao.getAllRecipes();
 
-        if (mAllRecipes.getValue() != null) {
-            for (Recipe recipe : mAllRecipes.getValue()) {
-                recipe.setRecipeSteps((ArrayList<RecipeStep>) mRecipeDao.getRecipeSteps(recipe.getRecipeName()));
-                recipe.setIngredients((ArrayList<Ingredient>) mRecipeDao.getRecipeIngredients(recipe.getRecipeName()));
-            }
-            Log.d(LOG_TAG, "Recipes retrieved from database, with steps and ingredients");
-        } else {
-            Log.d(LOG_TAG, "list of recipes if null at this point");
-        }
+//        if (mAllRecipes.getValue() != null) {
+//            for (Recipe recipe : mAllRecipes.getValue()) {
+//                recipe.setRecipeSteps((ArrayList<RecipeStep>) mRecipeDao.getRecipeSteps(recipe.getRecipeName()));
+//                recipe.setIngredients((ArrayList<Ingredient>) mRecipeDao.getRecipeIngredients(recipe.getRecipeName()));
+//            }
+//            Log.d(LOG_TAG, "Recipes retrieved from database, with steps and ingredients");
+//        } else {
+//            Log.d(LOG_TAG, "list of recipes if null at this point");
+//        }
     }
 
     LiveData<List<Recipe>> getAllRecipes() {
         return mAllRecipes;
+    }
+
+    List<Ingredient> getRecipeIngredients(String parentRecipe) {
+        return mRecipeDao.getRecipeIngredients(parentRecipe);
+    }
+
+    List<RecipeStep> getRecipeSteps(String parentRecipe) {
+        return mRecipeDao.getRecipeSteps(parentRecipe);
     }
 
     public void insert(ArrayList<Recipe> recipes) {

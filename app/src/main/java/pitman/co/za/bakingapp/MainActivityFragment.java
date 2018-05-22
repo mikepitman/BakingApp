@@ -4,10 +4,8 @@ import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -24,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pitman.co.za.bakingapp.data.RecipeViewModel;
-import pitman.co.za.bakingapp.data.RecipesContract;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
 import pitman.co.za.bakingapp.utility.FetchRecipesTask;
 
@@ -70,7 +67,6 @@ public class MainActivityFragment extends Fragment {
 
         // todo: adapter should be initiated with list of recipes pulled from database
         mAdapter = new RecipeCardAdapter(new ArrayList<Recipe>());
-//        mAdapter = new RecipeCardAdapter(mRecipeViewModel.getAllRecipes().getValue());
 
         // https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#13
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
@@ -100,6 +96,7 @@ public class MainActivityFragment extends Fragment {
             // this would then retrieve data from database
 //            populateRecipesAdapterWithOfflineData();
 
+/* // This is deprecated through use of room
             Uri recipesListing = RecipesContract.getRecipesList();
             Log.d(LOG_TAG, "retrieving from database using uri: " + recipesListing);
             Cursor cursor = getActivity().getContentResolver().query(recipesListing, null, null, null, null);
@@ -108,6 +105,7 @@ public class MainActivityFragment extends Fragment {
 //                getLoaderManager().restartLoader(1, null, MainActivityFragment.this);
                 cursor.close();
             }
+*/
         }
         return view;
     }

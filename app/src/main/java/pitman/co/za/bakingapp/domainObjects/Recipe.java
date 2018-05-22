@@ -4,6 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
  * Modified to utilise 'room', a hibernate-type database abstraction tool
  */
 @Entity(tableName = "recipe")
-public class Recipe  {
+public class Recipe implements Parcelable {
 
     @NonNull
     @ColumnInfo(name = "recipeId")
@@ -59,4 +61,36 @@ public class Recipe  {
     public void setRecipeSteps(ArrayList<RecipeStep> recipeSteps) {
         this.recipeSteps = recipeSteps;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.recipeId);
+        parcel.writeString(this.recipeName);
+//        parcel.writeList(mIngredients);
+//        parcel.writeList(mRecipeSteps);
+    }
+
+//    public Recipe() {}
+
+    protected Recipe(Parcel in) {
+        this.recipeId = in.readString();
+        this.recipeName= in.readString();
+//        this.mIngredients = in.readArrayList(Ingredient.class.getClassLoader());
+//        this.mRecipeSteps = in.readArrayList(RecipeStep.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {
+        public Recipe createFromParcel(Parcel source) {
+            return new Recipe(source);
+        }
+
+        public Recipe[] newArray(int size) {
+            return new Recipe[size];
+        }
+    };
 }

@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import pitman.co.za.bakingapp.domainObjects.Ingredient;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
 import pitman.co.za.bakingapp.domainObjects.RecipeStep;
 
@@ -82,6 +83,8 @@ public class RecipeSkeletonActivityFragment extends Fragment {
             Intent intent = getActivity().getIntent();
             if ((intent != null)) {
                 selectedRecipe = intent.getParcelableExtra("selectedRecipe");
+                selectedRecipe.setRecipeSteps(intent.<RecipeStep>getParcelableArrayListExtra("recipeSteps"));
+                selectedRecipe.setIngredients(intent.<Ingredient>getParcelableArrayListExtra("ingredientList"));
                 Log.d(LOG_TAG, "In RecipeSkeletonActivityFragment, selectedRecipe is null? " + (selectedRecipe == null));
             }
 

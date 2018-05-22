@@ -2,6 +2,8 @@ package pitman.co.za.bakingapp.domainObjects;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
@@ -16,7 +18,7 @@ import android.support.annotation.NonNull;
                 entity = Recipe.class,
                 parentColumns = "recipeName",
                 childColumns = "parentRecipe"))
-public class RecipeStep {
+public class RecipeStep implements Parcelable {
 
     @NonNull
     private String parentRecipe;
@@ -61,4 +63,39 @@ public class RecipeStep {
     public String getThumbnailUrl() {
         return thumbnailUrl;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.parentRecipe);
+        parcel.writeString(this.shortDescription);
+        parcel.writeString(this.description);
+        parcel.writeString(this.videoUrl);
+        parcel.writeString(this.thumbnailUrl);
+    }
+
+//    public RecipeStep() {
+//    }
+
+    protected RecipeStep(Parcel in) {
+        this.parentRecipe = in.readString();
+        this.shortDescription = in.readString();
+        this.description = in.readString();
+        this.videoUrl = in.readString();
+        this.thumbnailUrl = in.readString();
+    }
+
+    public static final Parcelable.Creator<RecipeStep> CREATOR = new Parcelable.Creator<RecipeStep>() {
+        public RecipeStep createFromParcel(Parcel source) {
+            return new RecipeStep(source);
+        }
+
+        public RecipeStep[] newArray(int size) {
+            return new RecipeStep[size];
+        }
+    };
 }

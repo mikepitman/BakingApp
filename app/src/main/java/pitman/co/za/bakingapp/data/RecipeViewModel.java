@@ -7,7 +7,9 @@ import android.arch.lifecycle.LiveData;
 import java.util.ArrayList;
 import java.util.List;
 
+import pitman.co.za.bakingapp.domainObjects.Ingredient;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
+import pitman.co.za.bakingapp.domainObjects.RecipeStep;
 
 public class RecipeViewModel extends AndroidViewModel {
 
@@ -23,6 +25,14 @@ public class RecipeViewModel extends AndroidViewModel {
 
     public LiveData<List<Recipe>> getAllRecipes() {
         return mAllRecipes;
+    }
+
+    public List<Ingredient> getRecipeIngredients(String parentRecipe) {
+        return mRepository.getRecipeIngredients(parentRecipe);
+    }
+
+    public List<RecipeStep> getRecipeSteps(String parentRecipe) {
+        return mRepository.getRecipeSteps(parentRecipe);
     }
 
     public void insert(ArrayList<Recipe> recipes) {

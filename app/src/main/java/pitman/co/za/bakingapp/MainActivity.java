@@ -1,5 +1,6 @@
 package pitman.co.za.bakingapp;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -8,7 +9,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import java.util.ArrayList;
+
+import pitman.co.za.bakingapp.data.RecipeViewModel;
+import pitman.co.za.bakingapp.domainObjects.Ingredient;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
+import pitman.co.za.bakingapp.domainObjects.RecipeStep;
 
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callbacks {
@@ -43,23 +49,29 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     @Override
     public void onRecipeSelected(Recipe recipe) {
 
+        RecipeViewModel mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+
         /*Guidance in part from Android Programming 2nd Ed, The Big Nerd Ranch pg 307+,
         as well as a lot of other tutorial sites, which I failed to notarise at the time.*/
         if (findViewById(R.id.twopane_activity) == null) {                      // phone
             Log.d(LOG_TAG, "preparing to view recipe on phone");
 
             Intent recipeDetailIntent = new Intent(this, RecipeSkeletonActivity.class);
-//            recipeDetailIntent.putExtra("selectedRecipe", recipe);
+            recipeDetailIntent.putExtra("selectedRecipe", recipe);
+            recipeDetailIntent.putParcelableArrayListExtra("recipeSteps", (ArrayList<RecipeStep>) mRecipeViewModel.getRecipeSteps(recipe.getRecipeName()));
+            recipeDetailIntent.putParcelableArrayListExtra("ingredientList", (ArrayList< Ingredient>) mRecipeViewModel.getRecipeIngredients(recipe.getRecipeName()));
             startActivity(recipeDetailIntent);
         } else {                                                                // tablet
 
             Log.d(LOG_TAG, "preparing to view recipe on tablet");
             Bundle arguments = new Bundle();
-//            arguments.putParcelable("selectedRecipe", recipe);
+            arguments.putParcelable("selectedRecipe", recipe);
+//            arguments.putParcelableArrayList("recipeSteps", recipe.getRecipeSteps());
+//            arguments.putParcelableArrayList("recipeIngredients", recipe.getIngredients());
 
-//            Fragment recipeDetailActivity = new RecipeSkeletonActivityFragment();
-//            recipeDetailActivity.setArguments(arguments);
-//            getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container, recipeDetailActivity).commit();
+            Fragment recipeDetailActivity = new RecipeSkeletonActivityFragment();
+            recipeDetailActivity.setArguments(arguments);
+            getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container, recipeDetailActivity).commit();
         }
     }
 }

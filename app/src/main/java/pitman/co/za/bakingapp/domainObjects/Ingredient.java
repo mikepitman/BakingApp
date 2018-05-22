@@ -2,6 +2,8 @@ package pitman.co.za.bakingapp.domainObjects;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 /**
@@ -13,7 +15,7 @@ import android.support.annotation.NonNull;
                 entity = Recipe.class,
                 parentColumns = "recipeName",
                 childColumns = "parentRecipe"))
-public class Ingredient {
+public class Ingredient implements Parcelable {
 
     @NonNull
     private String parentRecipe;
@@ -47,33 +49,33 @@ public class Ingredient {
         return ingredient;
     }
 
-//    @Override
-//    public int describeContents() {
-//        return 0;
-//    }
-//
-//    @Override
-//    public void writeToParcel(Parcel parcel, int i) {
-//        parcel.writeString(this.quantity);
-//        parcel.writeString(this.measure);
-//        parcel.writeString(this.ingredient);
-//    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.quantity);
+        parcel.writeString(this.measure);
+        parcel.writeString(this.ingredient);
+    }
 
 //    public Ingredient() {}
 
-//    protected Ingredient(Parcel in) {
-//        this.quantity = in.readString();
-//        this.measure= in.readString();
-//        this.ingredient= in.readString();
-//    }
+    protected Ingredient(Parcel in) {
+        this.quantity = in.readString();
+        this.measure= in.readString();
+        this.ingredient= in.readString();
+    }
 
-//    public static final Parcelable.Creator<Ingredient> CREATOR = new Parcelable.Creator<Ingredient>() {
-//        public Ingredient createFromParcel(Parcel source) {
-//            return new Ingredient(source);
-//        }
-//
-//        public Ingredient[] newArray(int size) {
-//            return new Ingredient[size];
-//        }
-//    };
+    public static final Parcelable.Creator<Ingredient> CREATOR = new Parcelable.Creator<Ingredient>() {
+        public Ingredient createFromParcel(Parcel source) {
+            return new Ingredient(source);
+        }
+
+        public Ingredient[] newArray(int size) {
+            return new Ingredient[size];
+        }
+    };
 }
