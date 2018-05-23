@@ -29,6 +29,9 @@ public interface RecipeDao {
     @Query("select * from Recipe order by recipeName")
     LiveData<List<Recipe>> getAllRecipes();
 
+    @Query("select * from Recipe where recipeName = :recipeName")
+    Recipe getRecipe(String recipeName);
+
     @Query("select * from recipe_ingredient where parentRecipe = :parentRecipe")
     List<Ingredient> getRecipeIngredients(String parentRecipe);
 

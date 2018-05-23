@@ -71,8 +71,8 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.recipeId);
         parcel.writeString(this.recipeName);
-//        parcel.writeList(mIngredients);
-//        parcel.writeList(mRecipeSteps);
+        parcel.writeList(ingredients);
+        parcel.writeList(recipeSteps);
     }
 
 //    public Recipe() {}
@@ -80,8 +80,8 @@ public class Recipe implements Parcelable {
     protected Recipe(Parcel in) {
         this.recipeId = in.readString();
         this.recipeName= in.readString();
-//        this.mIngredients = in.readArrayList(Ingredient.class.getClassLoader());
-//        this.mRecipeSteps = in.readArrayList(RecipeStep.class.getClassLoader());
+        this.ingredients = in.readArrayList(Ingredient.class.getClassLoader());
+        this.recipeSteps = in.readArrayList(RecipeStep.class.getClassLoader());
     }
 
     public static final Parcelable.Creator<Recipe> CREATOR = new Parcelable.Creator<Recipe>() {

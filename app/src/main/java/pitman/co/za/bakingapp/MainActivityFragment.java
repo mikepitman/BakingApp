@@ -33,7 +33,6 @@ public class MainActivityFragment extends Fragment {
 
     private static String LOG_TAG = MainActivityFragment.class.getSimpleName();
     private Context mContext;
-    private ArrayList<Recipe> mRecipeListData;
     private RecyclerView mRecipeRecyclerView;
     private Callbacks mCallbacks;
     private RecipeViewModel mRecipeViewModel;
@@ -65,18 +64,16 @@ public class MainActivityFragment extends Fragment {
 //        this.setHasOptionsMenu(true);
         Log.d(LOG_TAG, "2. onCreate()");
 
-        // todo: adapter should be initiated with list of recipes pulled from database
-        mAdapter = new RecipeCardAdapter(new ArrayList<Recipe>());
-
         // https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#13
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+
         mRecipeViewModel.getAllRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable final List<Recipe> recipes) {
                 mAdapter.swapData(recipes);
             }
         });
-        Log.d(LOG_TAG, "onChanged() set on mRecipeViewModel");
+        mAdapter = new RecipeCardAdapter(mRecipeViewModel.getAllRecipes().getValue());
     }
 
     @Override
@@ -132,7 +129,7 @@ public class MainActivityFragment extends Fragment {
         return connectivity;
     }
 
-    // called from async task that retrieves recipe data from internet, to populate adapter
+    // called from async FetchRecipesTask that retrieves recipe data from internet, to populate adapter
     public void generateRecipeAdapterWithData(ArrayList<Recipe> retrievedRecipes) {
         mRecipeViewModel.insert(retrievedRecipes);
     }
@@ -240,8 +237,12 @@ public class MainActivityFragment extends Fragment {
         }
 
         public void swapData(List<Recipe> recipes) {
-            int numberOfOldEntries = mRecipeListing.size();
-            mRecipeListing.clear();
+            int numberOfOldEntries = mRecipeListing == null ? 0 : mRecipeListing.size();
+            if (mRecipeListing != null) {
+                mRecipeListing.clear();
+            } else {
+                mRecipeListing = new ArrayList<Recipe>();
+            }
             mRecipeListing.addAll(recipes);
             Log.d(LOG_TAG, "data swapped out! " + numberOfOldEntries + " items removed, items added: " + recipes.size());
             notifyDataSetChanged();

@@ -27,38 +27,29 @@ public class RecipeRepository {
         RecipeRoomDatabase db = RecipeRoomDatabase.getDatabase(application);
         mRecipeDao = db.recipeDao();
         mAllRecipes = mRecipeDao.getAllRecipes();
-
-//        if (mAllRecipes.getValue() != null) {
-//            for (Recipe recipe : mAllRecipes.getValue()) {
-//                recipe.setRecipeSteps((ArrayList<RecipeStep>) mRecipeDao.getRecipeSteps(recipe.getRecipeName()));
-//                recipe.setIngredients((ArrayList<Ingredient>) mRecipeDao.getRecipeIngredients(recipe.getRecipeName()));
-//            }
-//            Log.d(LOG_TAG, "Recipes retrieved from database, with steps and ingredients");
-//        } else {
-//            Log.d(LOG_TAG, "list of recipes if null at this point");
-//        }
     }
 
     LiveData<List<Recipe>> getAllRecipes() {
         return mAllRecipes;
     }
 
-    List<Ingredient> getRecipeIngredients(String parentRecipe) {
-        return mRecipeDao.getRecipeIngredients(parentRecipe);
-    }
-
-    List<RecipeStep> getRecipeSteps(String parentRecipe) {
-        return mRecipeDao.getRecipeSteps(parentRecipe);
+    public void getRecipeAttributes(final Recipe recipe) {
+        /* Example used for off-thread retrieval of ingredients and steps for a selected recipe
+        * https://medium.freecodecamp.org/room-sqlite-beginner-tutorial-2e725e47bfab
+        */
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                recipe.setRecipeSteps((ArrayList<RecipeStep>) mRecipeDao.getRecipeSteps(recipe.getRecipeName()));
+                recipe.setIngredients((ArrayList<Ingredient>) mRecipeDao.getRecipeIngredients(recipe.getRecipeName()));
+            }
+        }).start();
     }
 
     public void insert(ArrayList<Recipe> recipes) {
-
         for (Recipe recipe : recipes) {
             new insertRecipeAsyncTask(mRecipeDao).execute(recipe);
-            new insertIngredientsAsyncTask(mRecipeDao).execute(recipe.getIngredients());
-            new insertRecipeStepsAsyncTask(mRecipeDao).execute(recipe.getRecipeSteps());
         }
-        Log.d(LOG_TAG, "Recipe and sub-objects added to database");
     }
 
     private static class insertRecipeAsyncTask extends AsyncTask<Recipe, Void, Void> {
@@ -71,37 +62,15 @@ public class RecipeRepository {
 
         @Override
         protected Void doInBackground(final Recipe... params) throws SQLiteConstraintException {
-            mAsyncTaskDao.saveRecipe(params[0]);
-            return null;
-        }
-    }
-
-    private static class insertIngredientsAsyncTask extends AsyncTask<ArrayList<Ingredient>, Void, Void> {
-
-        private RecipeDao mAsyncTaskDao;
-
-        insertIngredientsAsyncTask(RecipeDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final ArrayList<Ingredient>... params) throws SQLiteConstraintException {
-            mAsyncTaskDao.saveIngredients(params[0]);
-            return null;
-        }
-    }
-
-    private static class insertRecipeStepsAsyncTask extends AsyncTask<ArrayList<RecipeStep>, Void, Void> {
-
-        private RecipeDao mAsyncTaskDao;
-
-        insertRecipeStepsAsyncTask(RecipeDao dao) {
-            mAsyncTaskDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(final ArrayList<RecipeStep>... params) throws SQLiteConstraintException {
-            mAsyncTaskDao.saveRecipeSteps(params[0]);
+            Recipe recipe = params[0];
+            if (mAsyncTaskDao.getRecipe(recipe.getRecipeName()) == null) {
+                mAsyncTaskDao.saveRecipe(recipe);
+                mAsyncTaskDao.saveRecipeSteps(recipe.getRecipeSteps());
+                mAsyncTaskDao.saveIngredients(recipe.getIngredients());
+                Log.d(LOG_TAG, "recipe " + recipe.getRecipeName() + " added to database");
+            } else {
+                Log.d(LOG_TAG, "recipe " + recipe.getRecipeName() + " already exists in database");
+            }
             return null;
         }
     }

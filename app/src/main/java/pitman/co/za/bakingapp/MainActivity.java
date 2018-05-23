@@ -9,12 +9,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import java.util.ArrayList;
-
 import pitman.co.za.bakingapp.data.RecipeViewModel;
-import pitman.co.za.bakingapp.domainObjects.Ingredient;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
-import pitman.co.za.bakingapp.domainObjects.RecipeStep;
 
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callbacks {
@@ -50,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     public void onRecipeSelected(Recipe recipe) {
 
         RecipeViewModel mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mRecipeViewModel.getRecipeAttributes(recipe);
 
         /*Guidance in part from Android Programming 2nd Ed, The Big Nerd Ranch pg 307+,
         as well as a lot of other tutorial sites, which I failed to notarise at the time.*/
@@ -58,8 +55,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
             Intent recipeDetailIntent = new Intent(this, RecipeSkeletonActivity.class);
             recipeDetailIntent.putExtra("selectedRecipe", recipe);
-            recipeDetailIntent.putParcelableArrayListExtra("recipeSteps", (ArrayList<RecipeStep>) mRecipeViewModel.getRecipeSteps(recipe.getRecipeName()));
-            recipeDetailIntent.putParcelableArrayListExtra("ingredientList", (ArrayList< Ingredient>) mRecipeViewModel.getRecipeIngredients(recipe.getRecipeName()));
+//            recipeDetailIntent.putParcelableArrayListExtra("recipeSteps", recipe.getRecipeSteps());
+//            recipeDetailIntent.putParcelableArrayListExtra("ingredientList", recipe.getIngredients());
             startActivity(recipeDetailIntent);
         } else {                                                                // tablet
 
