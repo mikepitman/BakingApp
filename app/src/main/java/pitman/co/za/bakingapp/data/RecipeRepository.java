@@ -29,6 +29,7 @@ public class RecipeRepository {
         mAllRecipes = mRecipeDao.getAllRecipes();
     }
 
+    // Stored recipes are static
     LiveData<List<Recipe>> getAllRecipes() {
         return mAllRecipes;
     }
@@ -63,6 +64,7 @@ public class RecipeRepository {
         @Override
         protected Void doInBackground(final Recipe... params) throws SQLiteConstraintException {
             Recipe recipe = params[0];
+            // Only add recipe if it isn't already in the database (recipe name used as unique primary key)
             if (mAsyncTaskDao.getRecipe(recipe.getRecipeName()) == null) {
                 mAsyncTaskDao.saveRecipe(recipe);
                 mAsyncTaskDao.saveRecipeSteps(recipe.getRecipeSteps());
@@ -71,6 +73,7 @@ public class RecipeRepository {
             } else {
                 Log.d(LOG_TAG, "recipe " + recipe.getRecipeName() + " already exists in database");
             }
+            // todo: remove logging statements
             return null;
         }
     }

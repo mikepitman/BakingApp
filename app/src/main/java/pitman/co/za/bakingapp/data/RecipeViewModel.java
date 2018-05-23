@@ -15,6 +15,7 @@ public class RecipeViewModel extends AndroidViewModel {
 
     private LiveData<List<Recipe>> mAllRecipes;
 
+    // Constructor never called in examples I could find, hence second setting of the mAllRecipes attribute in getAllRecipes() method
     public RecipeViewModel(Application application) {
         super(application);
         mRepository = new RecipeRepository(application);
@@ -22,17 +23,13 @@ public class RecipeViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<Recipe>> getAllRecipes() {
-//        return mAllRecipes;
-        return mRepository.getAllRecipes();
+        mAllRecipes = mRepository.getAllRecipes();
+        return mAllRecipes;
     }
 
-    public void getRecipeAttributes(Recipe parentRecipe) {
+    public void loadRecipeAttributes(Recipe parentRecipe) {
         mRepository.getRecipeAttributes(parentRecipe);
     }
-
-//    public List<RecipeStep> getRecipeSteps(String parentRecipe) {
-//        return mRepository.getRecipeSteps(parentRecipe);
-//    }
 
     public void insert(ArrayList<Recipe> recipes) {
         mRepository.insert(recipes);

@@ -54,9 +54,6 @@
                 android:value="pitman.co.za.bakingapp.RecipeSkeletonActivity"/>
         </activity>
 
-        <provider android:authorities="pitman.co.za.bakingapp"
-                  android:name=".data.RecipesProvider"/>
-
     </application>
 
 </manifest>

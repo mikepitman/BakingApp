@@ -81,9 +81,8 @@ public class RecipeSkeletonActivityFragment extends Fragment {
         } else {
             Intent intent = getActivity().getIntent();
             if ((intent != null)) {
+                // Recipe object is parcelable, no need to separately add step or ingredient objects
                 selectedRecipe = intent.getParcelableExtra("selectedRecipe");
-//                selectedRecipe.setRecipeSteps(intent.<RecipeStep>getParcelableArrayListExtra("recipeSteps"));
-//                selectedRecipe.setIngredients(intent.<Ingredient>getParcelableArrayListExtra("ingredientList"));
                 Log.d(LOG_TAG, "In RecipeSkeletonActivityFragment, selectedRecipe is null? " + (selectedRecipe == null));
             }
 
@@ -93,6 +92,7 @@ public class RecipeSkeletonActivityFragment extends Fragment {
 //                selectedRecipe = arguments.getParcelable("selectedRecipe");
 //            }
         }
+        // todo: remove this debug step before finishing
         if (selectedRecipe == null) {
             Log.d(LOG_TAG, "selectedRecipe is null");
         }
@@ -123,8 +123,5 @@ public class RecipeSkeletonActivityFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(LOG_TAG, "onStop() called");
     }
-
-
 }
