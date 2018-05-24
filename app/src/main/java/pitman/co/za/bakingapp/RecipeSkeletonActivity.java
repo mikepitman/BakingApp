@@ -30,7 +30,6 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
 
         Log.d(LOG_TAG, "onCreate() in RecipeSkeletonActivity");
         setContentView(R.layout.activity_recipe_skeleton);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.recipe_skeleton_container);
@@ -40,7 +39,13 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
             fm.beginTransaction().add(R.id.recipe_skeleton_container, fragment).commit();
             Log.d(LOG_TAG, "new fragment added to fragmentManager");
         }
+//        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
+
+//    @Override
+//    protected boolean onOptionsItemSelected(MenuItem item) {
+//
+//    }
 
     public void onSkeletonItemSelected(int selectedItemPosition) {          // callbacks method to launch intent to view recipe ingredients or selected recipe step
         Log.d(LOG_TAG, "position returned: " + selectedItemPosition);

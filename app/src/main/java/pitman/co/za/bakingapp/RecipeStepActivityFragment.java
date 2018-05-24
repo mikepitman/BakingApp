@@ -86,6 +86,8 @@ public class RecipeStepActivityFragment extends Fragment {
 //            }
         }
 
+        // todo: handle case where there isn't a video URL
+
         RecipeStep selectedStep = mSelectedRecipe.getRecipeSteps().get(mRecipeStepIndex);
         Log.d(LOG_TAG, "selectedRecipe is null? " + (mSelectedRecipe == null) + ". Selected step ID: " + mRecipeStepIndex);
         Log.d(LOG_TAG, "" + selectedStep.getShortDescription() + "  " + selectedStep.getVideoUrl());
@@ -96,7 +98,7 @@ public class RecipeStepActivityFragment extends Fragment {
         // Initialize the player view.
         mPlayerView = rootView.findViewById(R.id.playerView);
         mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-        if (selectedStep.getVideoUrl() != null) {
+        if ((selectedStep.getVideoUrl() != null) && (!selectedStep.getVideoUrl().isEmpty())) {
             initializePlayer(Uri.parse(selectedStep.getVideoUrl()));
         }
 
