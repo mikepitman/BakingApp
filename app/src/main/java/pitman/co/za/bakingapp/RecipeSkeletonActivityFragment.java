@@ -52,11 +52,11 @@ public class RecipeSkeletonActivityFragment extends Fragment {
         mCallbacks = null;
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putParcelable("selectedRecipe", selectedRecipe);
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("selectedRecipe", selectedRecipe);
+    }
 
     /* todo:
         Load from database, while waiting for the query to return with data - in main activity/fragment

@@ -71,6 +71,9 @@ public class MainActivityFragment extends Fragment {
             @Override
             public void onChanged(@Nullable final List<Recipe> recipes) {
                 mAdapter.swapData(recipes);
+                for (Recipe recipe : recipes) {
+                    mRecipeViewModel.loadRecipeAttributes(recipe);
+                }
             }
         });
         mAdapter = new RecipeCardAdapter(mRecipeViewModel.getAllRecipes().getValue());
@@ -90,19 +93,6 @@ public class MainActivityFragment extends Fragment {
             new FetchRecipesTask(this).execute();
         } else {
             appMessageToast("No network connection available! Displaying recipes from memory.");
-            // this would then retrieve data from database
-//            populateRecipesAdapterWithOfflineData();
-
-/* // This is deprecated through use of room
-            Uri recipesListing = RecipesContract.getRecipesList();
-            Log.d(LOG_TAG, "retrieving from database using uri: " + recipesListing);
-            Cursor cursor = getActivity().getContentResolver().query(recipesListing, null, null, null, null);
-            if (cursor != null) {
-                // commented out while getting app running again using room
-//                getLoaderManager().restartLoader(1, null, MainActivityFragment.this);
-                cursor.close();
-            }
-*/
         }
         return view;
     }
@@ -133,77 +123,6 @@ public class MainActivityFragment extends Fragment {
     public void generateRecipeAdapterWithData(ArrayList<Recipe> retrievedRecipes) {
         mRecipeViewModel.insert(retrievedRecipes);
     }
-
-//    private void populateRecipesAdapterWithOfflineData() {
-////        recipesAdapter = new ArrayAdapter<Recipe>(mContext, R.layout.recipe_list_recipe_title, R.id.recipe_list_recipe_title_textview, new ArrayList<Recipe>());
-////        recipesAdapter.clear();
-//
-//        ArrayList<Ingredient> ingredients = new ArrayList<>();
-//        Ingredient ing1 = new Ingredient();
-//        ing1.setIngredient("Ing 1");
-//        ing1.setMeasure("Meas 1");
-//        ing1.setQuantity("1");
-//
-//        Ingredient ing2 = new Ingredient();
-//        ing2.setIngredient("Ing 2");
-//        ing2.setMeasure("Meas 2");
-//        ing2.setQuantity("2");
-//
-//        ingredients.add(ing1);
-//        ingredients.add(ing2);
-//
-//        ArrayList<RecipeStep> steps = new ArrayList<>();
-//        RecipeStep step1 = new RecipeStep();
-//        step1.setId("1");
-//        step1.setShortDesciption("Step 1");
-//        step1.setShortDesciption("Recipe Step 1");
-//
-//        RecipeStep step2 = new RecipeStep();
-//        step2.setId("2");
-//        step2.setShortDesciption("Step 2");
-//        step2.setShortDesciption("Recipe Step 2");
-//
-//        RecipeStep step3 = new RecipeStep();
-//        step3.setId("3");
-//        step3.setShortDesciption("Step 3");
-//        step3.setShortDesciption("Recipe Step 3");
-//
-//        RecipeStep step4 = new RecipeStep();
-//        step4.setId("4");
-//        step4.setShortDesciption("Step 4");
-//        step4.setShortDesciption("Recipe Step 4");
-//
-//        steps.add(step1);
-//        steps.add(step2);
-//        steps.add(step3);
-//        steps.add(step4);
-//
-//        Recipe recipe1 = new Recipe();
-//        recipe1.setRecipeId("1");
-//        recipe1.setRecipeName("Test Recipe ONE");
-//        recipe1.setIngredients(ingredients);
-//        recipe1.setRecipeSteps(steps);
-//
-//        Recipe recipe2 = new Recipe();
-//        recipe2.setRecipeId("2");
-//        recipe2.setRecipeName("Test Recipe TWO");
-//        recipe2.setIngredients(ingredients);
-//        recipe2.setRecipeSteps(steps);
-//
-//        Recipe recipe3 = new Recipe();
-//        recipe3.setRecipeId("3");
-//        recipe3.setRecipeName("Test Recipe THREE");
-//        recipe3.setIngredients(ingredients);
-//        recipe3.setRecipeSteps(steps);
-//
-//        List<Recipe> recipeList = new ArrayList<>();
-//        recipeList.add(recipe1);
-//        recipeList.add(recipe2);
-//        recipeList.add(recipe3);
-//
-//        mAdapter = new RecipeCardAdapter(recipeList);
-//        mRecipeRecyclerView.setAdapter(mAdapter);
-//    }
 
     private class RecipeCardAdapter extends RecyclerView.Adapter<ViewHolder> {
 

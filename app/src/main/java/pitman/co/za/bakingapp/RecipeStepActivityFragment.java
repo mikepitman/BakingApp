@@ -50,12 +50,12 @@ public class RecipeStepActivityFragment extends Fragment {
 
     public RecipeStepActivityFragment() { Log.d(LOG_TAG, "RecipeStepActivityFragment constructor called"); }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putParcelable("selectedRecipe", mSelectedRecipe);
-//        outState.putInt("selectedStep", mRecipeStepIndex);
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("selectedRecipe", mSelectedRecipe);
+        outState.putInt("selectedStep", mRecipeStepIndex);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

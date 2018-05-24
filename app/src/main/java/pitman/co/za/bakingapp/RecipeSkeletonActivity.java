@@ -21,6 +21,7 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putParcelable("selectedRecipe", selectedRecipe);
     }
 
     @Override
@@ -54,8 +55,6 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
             startActivity(recipeIngredientsIntent);
 
         } else {                                // View selected recipe step
-//            RecipeStep selectedRecipeStep = selectedRecipe.getRecipeSteps().get(selectedItemPosition - 1);
-
             Intent recipeStepIntent = new Intent(this, RecipeStepActivity.class);
             recipeStepIntent.putExtra("recipe", selectedRecipe);
             recipeStepIntent.putExtra("selectedStep", (selectedItemPosition - 1));  // ID of selected step

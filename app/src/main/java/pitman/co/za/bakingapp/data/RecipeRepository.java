@@ -4,7 +4,6 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.database.sqlite.SQLiteConstraintException;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +28,7 @@ public class RecipeRepository {
         mAllRecipes = mRecipeDao.getAllRecipes();
     }
 
-    // Stored recipes are static
+    // Stored recipes are static, but list may have recipes added as new recipes added to json listing
     LiveData<List<Recipe>> getAllRecipes() {
         return mAllRecipes;
     }
@@ -69,11 +68,7 @@ public class RecipeRepository {
                 mAsyncTaskDao.saveRecipe(recipe);
                 mAsyncTaskDao.saveRecipeSteps(recipe.getRecipeSteps());
                 mAsyncTaskDao.saveIngredients(recipe.getIngredients());
-                Log.d(LOG_TAG, "recipe " + recipe.getRecipeName() + " added to database");
-            } else {
-                Log.d(LOG_TAG, "recipe " + recipe.getRecipeName() + " already exists in database");
             }
-            // todo: remove logging statements
             return null;
         }
     }
