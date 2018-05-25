@@ -1,5 +1,6 @@
 package pitman.co.za.bakingapp;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import pitman.co.za.bakingapp.data.RecipeViewModel;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
 
 /**
@@ -20,8 +22,8 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putParcelable("selectedRecipe", selectedRecipe);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -47,6 +49,12 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
 //
 //    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "onResume()");
+    }
+
     public void onSkeletonItemSelected(int selectedItemPosition) {          // callbacks method to launch intent to view recipe ingredients or selected recipe step
         Log.d(LOG_TAG, "position returned: " + selectedItemPosition);
 
@@ -65,5 +73,26 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
             recipeStepIntent.putExtra("selectedStep", (selectedItemPosition - 1));  // ID of selected step
             startActivity(recipeStepIntent);
         }
+
+        RecipeViewModel mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
+        mRecipeViewModel.setSelectedRecipe(selectedRecipe);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause()");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "onStop()");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy()");
     }
 }

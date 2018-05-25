@@ -1,3 +1,4 @@
+
 package pitman.co.za.bakingapp;
 
 import android.os.Bundle;
@@ -33,5 +34,11 @@ public class RecipeStepActivity extends AppCompatActivity {
             fm.beginTransaction().add(R.id.recipe_step_container, fragment).commit();
             Log.d(LOG_TAG, "new fragment added to fragmentManager");
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Log.d(LOG_TAG, "onBackPressed in RecipeStepActivity");
     }
 }

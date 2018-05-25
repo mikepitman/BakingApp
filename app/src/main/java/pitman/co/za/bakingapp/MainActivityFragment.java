@@ -121,7 +121,9 @@ public class MainActivityFragment extends Fragment {
 
     // called from async FetchRecipesTask that retrieves recipe data from internet, to populate adapter
     public void generateRecipeAdapterWithData(ArrayList<Recipe> retrievedRecipes) {
-        mRecipeViewModel.insert(retrievedRecipes);
+        if (retrievedRecipes != null) {
+            mRecipeViewModel.insert(retrievedRecipes);
+        }
     }
 
     private class RecipeCardAdapter extends RecyclerView.Adapter<ViewHolder> {

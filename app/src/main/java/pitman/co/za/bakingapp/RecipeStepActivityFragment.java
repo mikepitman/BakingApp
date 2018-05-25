@@ -225,7 +225,4 @@ public class RecipeStepActivityFragment extends Fragment {
 //    @Override
 //    public void onPlayerError(ExoPlaybackException error) {
 //    }
-
-
-
 }

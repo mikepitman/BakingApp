@@ -54,8 +54,8 @@ public class RecipeSkeletonActivityFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putParcelable("selectedRecipe", selectedRecipe);
+        super.onSaveInstanceState(outState);
     }
 
     /* todo:
@@ -121,7 +121,22 @@ public class RecipeSkeletonActivityFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause()");
+    }
+
+    @Override
     public void onStop() {
         super.onStop();
+        Log.d(LOG_TAG, "onStop()");
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy()");
+    }
+
+
 }
