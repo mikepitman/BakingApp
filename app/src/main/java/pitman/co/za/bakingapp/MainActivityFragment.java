@@ -9,12 +9,14 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +30,6 @@ import pitman.co.za.bakingapp.utility.FetchRecipesTask;
 /**
  * A placeholder fragment containing a simple view.
  */
-//public class MainActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 public class MainActivityFragment extends Fragment {
 
     private static String LOG_TAG = MainActivityFragment.class.getSimpleName();
@@ -42,7 +43,7 @@ public class MainActivityFragment extends Fragment {
         Log.d(LOG_TAG, "MainActivityFragment constructor called");
     }
 
-    //// Callbacks-related code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //// Callbacks-related code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public interface Callbacks {
         void onRecipeSelected(Recipe recipe);
     }
@@ -56,7 +57,7 @@ public class MainActivityFragment extends Fragment {
         super.onDetach();
         mCallbacks = null;
     }
-//// Callbacks-related code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //// Callbacks-related code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,6 @@ public class MainActivityFragment extends Fragment {
 
         // https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#13
         mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-
         mRecipeViewModel.getAllRecipes().observe(this, new Observer<List<Recipe>>() {
             @Override
             public void onChanged(@Nullable final List<Recipe> recipes) {
@@ -80,13 +80,26 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "onResume()");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(LOG_TAG, "3. onCreateView()");
 
+        // Get bundle arguments from MainActivity
+        boolean isTablet = false;
+        Bundle arguments = this.getArguments();
+        if (arguments != null) {
+            isTablet = arguments.getBoolean("isTablet");
+        }
+
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         mRecipeRecyclerView = (RecyclerView) view.findViewById(R.id.recipe_cards_rv);
-        mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecipeRecyclerView.setLayoutManager(isTablet ? new GridLayoutManager(getActivity(), 2) : new LinearLayoutManager(getActivity()));
         mRecipeRecyclerView.setAdapter(mAdapter);
 
         if (isNetworkAvailable()) {
@@ -166,6 +179,67 @@ public class MainActivityFragment extends Fragment {
             }
             mRecipeListing.addAll(recipes);
             Log.d(LOG_TAG, "data swapped out! " + numberOfOldEntries + " items removed, items added: " + recipes.size());
+            notifyDataSetChanged();
+        }
+    }
+
+    /* Built using example at http://www.mkyong.com/android/android-gridview-example/ */
+    private class RecipeGridAdapter extends BaseAdapter {
+
+        private List<Recipe> mRecipeListing;
+        private String LOG_TAG = RecipeGridAdapter.class.getSimpleName();
+
+        public RecipeGridAdapter(List<Recipe> recipes) {
+            this.mRecipeListing = recipes;
+        }
+
+        @Override
+        public int getCount() {
+            return mRecipeListing.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mRecipeListing.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+//            LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View gridview;
+
+            if (convertView == null) {
+
+                // get layout
+//                gridview = inflater.inflate(R.layout.thumbnail_imageview, null);
+//                TextView textView = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card_recipe_name, parent, false);
+                gridview = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card_recipe_name, parent, false);
+
+            } else {
+                gridview = (View) convertView;
+            }
+
+            return gridview;
+        }
+
+        public void swapData(List<Recipe> recipeListing) {
+            if (mRecipeListing != null) {
+                mRecipeListing.clear();
+            } else {
+                mRecipeListing = new ArrayList<Recipe>();
+            }
+            mRecipeListing.addAll(recipeListing);
             notifyDataSetChanged();
         }
     }

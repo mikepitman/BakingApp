@@ -7,7 +7,6 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -23,10 +22,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 /*
 * Source example for this unit test:
 * https://developer.android.com/training/data-storage/room/testing-db
-* todo: get this unit test working
+* path /src/androidTest/java is the correct path - compile issues encountered with test under /src/test/
 */
 
-@Ignore
 @RunWith(AndroidJUnit4.class)
 public class RoomRecipeReadWriteTest {
 

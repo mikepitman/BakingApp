@@ -42,7 +42,7 @@ public class RecipeSkeletonActivityFragment extends Fragment {
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mContext = this.getActivity().getApplicationContext();
+//        mContext = this.getActivity().getApplicationContext();
         mCallbacks = (Callbacks) activity;
     }
 
@@ -57,15 +57,6 @@ public class RecipeSkeletonActivityFragment extends Fragment {
         outState.putParcelable("selectedRecipe", selectedRecipe);
         super.onSaveInstanceState(outState);
     }
-
-    /* todo:
-        Load from database, while waiting for the query to return with data - in main activity/fragment
-        Save query results to database when it returns from off-thread job
-        probably implement loaders for the above as well :-(
-        save the recipe ID to shared preferences in onSaveInstanceState, so that it can be retrieved when returning to action/fragment from a non-terminating event, ie back-press
-        ensure all navigation works properly
-        work on layouts for tablet, and landscape orientations
-         */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -97,7 +88,11 @@ public class RecipeSkeletonActivityFragment extends Fragment {
             Log.d(LOG_TAG, "selectedRecipe is null");
         }
 
-        recipeSkeletonAdapter = new ArrayAdapter<String>(mContext, R.layout.recipe_skeleton_textview, R.id.recipe_skeleton_textview, new ArrayList<String>());
+        recipeSkeletonAdapter = new ArrayAdapter<String>(
+                this.getActivity().getApplicationContext(),
+                R.layout.recipe_skeleton_textview,
+                R.id.recipe_skeleton_textview,
+                new ArrayList<String>());
         recipeSkeletonAdapter.clear();
 
         recipeSkeletonAdapter.add("Ingredients");
@@ -123,19 +118,19 @@ public class RecipeSkeletonActivityFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(LOG_TAG, "onPause()");
+//        Log.d(LOG_TAG, "onPause()");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(LOG_TAG, "onStop()");
+//        Log.d(LOG_TAG, "onStop()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(LOG_TAG, "onDestroy()");
+//        Log.d(LOG_TAG, "onDestroy()");
     }
 
 

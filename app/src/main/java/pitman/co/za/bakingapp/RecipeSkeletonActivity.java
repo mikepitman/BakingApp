@@ -42,18 +42,14 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
             Log.d(LOG_TAG, "new fragment added to fragmentManager");
         }
 //        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // todo: in tablet mode, selected recipe should be in master-detail view - skeleton master, recipe step/Ingredients in detail fragment
     }
 
 //    @Override
 //    protected boolean onOptionsItemSelected(MenuItem item) {
 //
 //    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(LOG_TAG, "onResume()");
-    }
 
     public void onSkeletonItemSelected(int selectedItemPosition) {          // callbacks method to launch intent to view recipe ingredients or selected recipe step
         Log.d(LOG_TAG, "position returned: " + selectedItemPosition);
@@ -78,21 +74,29 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
         mRecipeViewModel.setSelectedRecipe(selectedRecipe);
     }
 
+
+//  Lifecycle events overridden to help follow flow-of-execution where necessary
+    @Override
+    public void onResume() {
+        super.onResume();
+//        Log.d(LOG_TAG, "onResume()");
+    }
+
     @Override
     public void onPause() {
         super.onPause();
-        Log.d(LOG_TAG, "onPause()");
+//        Log.d(LOG_TAG, "onPause()");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        Log.d(LOG_TAG, "onStop()");
+//        Log.d(LOG_TAG, "onStop()");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(LOG_TAG, "onDestroy()");
+//        Log.d(LOG_TAG, "onDestroy()");
     }
 }

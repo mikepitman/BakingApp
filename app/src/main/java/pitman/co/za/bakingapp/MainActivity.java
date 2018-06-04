@@ -13,11 +13,12 @@ import pitman.co.za.bakingapp.domainObjects.Recipe;
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callbacks {
 
-    private String LOG_TAG = MainActivityFragment.class.getSimpleName();
+    private String LOG_TAG = MainActivity.class.getSimpleName();
+    private boolean mIsTablet;
 
     @LayoutRes
     protected int getLayoutResId() {
-        return R.layout.activity_masterdetail;      // returns de-referenced value, for different screen sizes
+        return R.layout.activity_main;      // returns de-referenced value, for different screen sizes - not strictly necessary here
     }
 
     @Override
@@ -26,15 +27,24 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
         Log.d(LOG_TAG, "mainActivity being created");
 
-        setContentView(getLayoutResId());
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
+
+        int layoutResId = getLayoutResId();
+        setContentView(layoutResId);
 
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
+        mIsTablet = getResources().getBoolean(R.bool.is_tablet);
+
         if (fragment == null) {
             fragment = new MainActivityFragment();
+
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isTablet", mIsTablet);
+            fragment.setArguments(bundle);
+
             fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
         }
     }
@@ -43,12 +53,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
     @Override
     public void onRecipeSelected(Recipe recipe) {
 
-//        RecipeViewModel mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-//        mRecipeViewModel.loadRecipeAttributes(recipe);
-
         /*Guidance in part from Android Programming 2nd Ed, The Big Nerd Ranch pg 307+,
         as well as a lot of other tutorial sites, which I failed to notarise at the time.*/
-        if (findViewById(R.id.twopane_activity) == null) {                      // phone
+        if (!mIsTablet) {                                                     // phone
             Log.d(LOG_TAG, "preparing to view recipe on phone");
 
             Intent recipeDetailIntent = new Intent(this, RecipeSkeletonActivity.class);
@@ -64,5 +71,39 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
             recipeDetailActivity.setArguments(arguments);
             getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container, recipeDetailActivity).commit();
         }
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//// Activity lifecycle methods for debugging/understanding/etc //////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(LOG_TAG, "onNewIntent()");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "onResume()");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause()");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, "onStop()");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy()");
     }
 }
