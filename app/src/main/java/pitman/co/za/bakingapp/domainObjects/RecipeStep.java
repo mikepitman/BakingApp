@@ -23,13 +23,12 @@ public class RecipeStep implements Parcelable {
     @NonNull
     private String parentRecipe;
     private String shortDescription;
-    @NonNull
-    private String stepNumber;
+    private int stepNumber;
     private String description;
     private String videoUrl;
     private String thumbnailUrl;
 
-    public RecipeStep(@NonNull String parentRecipe, String shortDescription, @NonNull String stepNumber, String description, String videoUrl, String thumbnailUrl) {
+    public RecipeStep(@NonNull String parentRecipe, String shortDescription, int stepNumber, String description, String videoUrl, String thumbnailUrl) {
         this.parentRecipe = parentRecipe;
         this.shortDescription = shortDescription;
         this.stepNumber = stepNumber;
@@ -47,8 +46,7 @@ public class RecipeStep implements Parcelable {
         return shortDescription;
     }
 
-    @NonNull
-    public String getStepNumber() {
+    public int getStepNumber() {
         return stepNumber;
     }
 
@@ -73,6 +71,7 @@ public class RecipeStep implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.parentRecipe);
         parcel.writeString(this.shortDescription);
+        parcel.writeInt(this.stepNumber);
         parcel.writeString(this.description);
         parcel.writeString(this.videoUrl);
         parcel.writeString(this.thumbnailUrl);
@@ -84,6 +83,7 @@ public class RecipeStep implements Parcelable {
     protected RecipeStep(Parcel in) {
         this.parentRecipe = in.readString();
         this.shortDescription = in.readString();
+        this.stepNumber = in.readInt();
         this.description = in.readString();
         this.videoUrl = in.readString();
         this.thumbnailUrl = in.readString();

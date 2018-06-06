@@ -35,6 +35,6 @@ public interface RecipeDao {
     @Query("select * from recipe_ingredient where parentRecipe = :parentRecipe")
     List<Ingredient> getRecipeIngredients(String parentRecipe);
 
-    @Query("select * from recipe_step where parentRecipe = :parentRecipe")
+    @Query("select * from recipe_step where parentRecipe = :parentRecipe order by stepNumber")
     List<RecipeStep> getRecipeSteps(String parentRecipe);
 }

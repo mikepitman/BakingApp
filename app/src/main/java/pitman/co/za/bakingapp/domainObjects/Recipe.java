@@ -31,9 +31,17 @@ public class Recipe implements Parcelable {
     @Ignore
     private ArrayList<RecipeStep> recipeSteps;
 
-    public Recipe(@NonNull String recipeId, @NonNull String recipeName) {
+    @ColumnInfo(name = "recipeServings")
+    private String recipeServings;
+
+    @ColumnInfo(name = "recipeImage")
+    private String recipeImage;
+
+    public Recipe(@NonNull String recipeId, @NonNull String recipeName, String recipeServings, String recipeImage) {
         this.recipeId = recipeId;
         this.recipeName = recipeName;
+        this.recipeServings = recipeServings;
+        this.recipeImage = recipeImage;
     }
 
     @NonNull
@@ -62,6 +70,14 @@ public class Recipe implements Parcelable {
         this.recipeSteps = recipeSteps;
     }
 
+    public String getRecipeServings() {
+        return recipeServings;
+    }
+
+    public String getRecipeImage() {
+        return recipeImage;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -71,6 +87,8 @@ public class Recipe implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.recipeId);
         parcel.writeString(this.recipeName);
+        parcel.writeString(this.recipeServings);
+        parcel.writeString(this.recipeImage);
         parcel.writeList(ingredients);
         parcel.writeList(recipeSteps);
     }
@@ -80,6 +98,8 @@ public class Recipe implements Parcelable {
     protected Recipe(Parcel in) {
         this.recipeId = in.readString();
         this.recipeName= in.readString();
+        this.recipeServings = in.readString();
+        this.recipeImage = in.readString();
         this.ingredients = in.readArrayList(Ingredient.class.getClassLoader());
         this.recipeSteps = in.readArrayList(RecipeStep.class.getClassLoader());
     }

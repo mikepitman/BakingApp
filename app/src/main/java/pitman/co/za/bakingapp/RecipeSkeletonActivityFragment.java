@@ -76,15 +76,9 @@ public class RecipeSkeletonActivityFragment extends Fragment {
                 selectedRecipe = intent.getParcelableExtra("selectedRecipe");
                 Log.d(LOG_TAG, "In RecipeSkeletonActivityFragment, selectedRecipe is null? " + (selectedRecipe == null));
             }
-
-            // master-detail layout for a tablet -- change this to be more accurate/resilient
-//            if (selectedRecipe == null) {
-//                Bundle arguments = this.getArguments();
-//                selectedRecipe = arguments.getParcelable("selectedRecipe");
-//            }
         }
-        // todo: remove this debug step before finishing
-        if (selectedRecipe == null) {
+
+        if (selectedRecipe == null) {                   // todo: remove this debug step before finishing
             Log.d(LOG_TAG, "selectedRecipe is null");
         }
 
@@ -132,6 +126,4 @@ public class RecipeSkeletonActivityFragment extends Fragment {
         super.onDestroy();
 //        Log.d(LOG_TAG, "onDestroy()");
     }
-
-
 }

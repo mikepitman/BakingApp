@@ -16,8 +16,6 @@ public class RecipeStepActivity extends AppCompatActivity {
 
     private static String LOG_TAG = RecipeStepActivity.class.getSimpleName();
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

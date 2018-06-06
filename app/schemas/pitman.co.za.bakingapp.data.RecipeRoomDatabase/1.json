@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "86000dbbadcc1ecaca3a6410b61ab0c7",
+    "identityHash": "35f19c237319115d48da9748d7b0ac68",
     "entities": [
       {
         "tableName": "recipe",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeId` TEXT NOT NULL, `recipeName` TEXT NOT NULL, PRIMARY KEY(`recipeName`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`recipeId` TEXT NOT NULL, `recipeName` TEXT NOT NULL, `recipeServings` TEXT, `recipeImage` TEXT, PRIMARY KEY(`recipeName`))",
         "fields": [
           {
             "fieldPath": "recipeId",
@@ -19,6 +19,18 @@
             "columnName": "recipeName",
             "affinity": "TEXT",
             "notNull": true
+          },
+          {
+            "fieldPath": "recipeServings",
+            "columnName": "recipeServings",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recipeImage",
+            "columnName": "recipeImage",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -32,7 +44,7 @@
       },
       {
         "tableName": "recipe_step",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`parentRecipe` TEXT NOT NULL, `shortDescription` TEXT, `stepNumber` TEXT NOT NULL, `description` TEXT, `videoUrl` TEXT, `thumbnailUrl` TEXT, PRIMARY KEY(`parentRecipe`, `stepNumber`), FOREIGN KEY(`parentRecipe`) REFERENCES `recipe`(`recipeName`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`parentRecipe` TEXT NOT NULL, `shortDescription` TEXT, `stepNumber` INTEGER NOT NULL, `description` TEXT, `videoUrl` TEXT, `thumbnailUrl` TEXT, PRIMARY KEY(`parentRecipe`, `stepNumber`), FOREIGN KEY(`parentRecipe`) REFERENCES `recipe`(`recipeName`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
         "fields": [
           {
             "fieldPath": "parentRecipe",
@@ -49,7 +61,7 @@
           {
             "fieldPath": "stepNumber",
             "columnName": "stepNumber",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -147,7 +159,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"86000dbbadcc1ecaca3a6410b61ab0c7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"35f19c237319115d48da9748d7b0ac68\")"
     ]
   }
 }

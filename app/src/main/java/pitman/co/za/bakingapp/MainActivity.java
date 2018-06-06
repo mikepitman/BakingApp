@@ -55,22 +55,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 
         /*Guidance in part from Android Programming 2nd Ed, The Big Nerd Ranch pg 307+,
         as well as a lot of other tutorial sites, which I failed to notarise at the time.*/
-        if (!mIsTablet) {                                                     // phone
-            Log.d(LOG_TAG, "preparing to view recipe on phone");
+//        if (!mIsTablet) {                                                     // phone
+//            Log.d(LOG_TAG, "preparing to view recipe on phone");
 
             Intent recipeDetailIntent = new Intent(this, RecipeSkeletonActivity.class);
             recipeDetailIntent.putExtra("selectedRecipe", recipe);
+            recipeDetailIntent.putExtra("isTablet", mIsTablet);
             startActivity(recipeDetailIntent);
-        } else {                                                                // tablet
-
-            Log.d(LOG_TAG, "preparing to view recipe on tablet");
-            Bundle arguments = new Bundle();
-            arguments.putParcelable("selectedRecipe", recipe);
-
-            Fragment recipeDetailActivity = new RecipeSkeletonActivityFragment();
-            recipeDetailActivity.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container, recipeDetailActivity).commit();
-        }
+//        } else {                                                                // tablet
+//
+//            Log.d(LOG_TAG, "preparing to view recipe on tablet");
+//            Bundle arguments = new Bundle();
+//            arguments.putParcelable("selectedRecipe", recipe);
+//
+//            Fragment recipeDetailActivity = new RecipeSkeletonActivityFragment();
+//            recipeDetailActivity.setArguments(arguments);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.detail_fragment_container, recipeDetailActivity).commit();
+//        }
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

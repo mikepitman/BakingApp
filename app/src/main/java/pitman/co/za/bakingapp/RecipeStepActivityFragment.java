@@ -70,6 +70,13 @@ public class RecipeStepActivityFragment extends Fragment {
             mRecipeStepIndex = savedInstanceState.getInt("selectedStep", 0);
             Log.d(LOG_TAG, "recipe retrieved from savedInstanceState");
 
+        // Fragment instantiated from RecipeSkeletonActivity, in master-detail layout
+        } else if (this.getArguments() != null) {
+            Bundle arguments = this.getArguments();
+            mSelectedRecipe = arguments.getParcelable("selectedRecipe");
+            mRecipeStepIndex = arguments.getInt("selectedItemPosition");
+
+        // Fragment instantiated by RecipeStepActivity, as stand-along fragment
         } else {
             Intent intent = getActivity().getIntent();
             if ((intent != null)) {
@@ -77,28 +84,25 @@ public class RecipeStepActivityFragment extends Fragment {
                 mRecipeStepIndex = intent.getIntExtra("selectedStep", 0);
                 Log.d(LOG_TAG, "In RecipeStepActivityFragment, selectedRecipe is null? " + (mSelectedRecipe == null));
             }
-
-            // master-detail layout for a tablet -- change this to be more accurate/resilient
-//            if (mSelectedRecipe == null) {
-//                Bundle arguments = this.getArguments();
-//                mSelectedRecipe = arguments.getParcelable("selectedRecipe");
-//                mRecipeStepIndex = arguments.getInt("selectedStep", 0);
-//            }
         }
+
+        // if user selects 'Ingredients' tab, mRecipeStepIndex may == -1, so set to 0
+         mRecipeStepIndex = (mRecipeStepIndex < 0 ? 0 : mRecipeStepIndex);
 
         // todo: handle case where there isn't a video URL
 
         RecipeStep selectedStep = mSelectedRecipe.getRecipeSteps().get(mRecipeStepIndex);
         Log.d(LOG_TAG, "selectedRecipe is null? " + (mSelectedRecipe == null) + ". Selected step ID: " + mRecipeStepIndex);
-        Log.d(LOG_TAG, "" + selectedStep.getShortDescription() + "  " + selectedStep.getVideoUrl());
+        Log.d(LOG_TAG, "" + selectedStep.getShortDescription() + " .:. " + selectedStep.getVideoUrl());
 
         TextView longDescriptionView = (TextView) rootView.findViewById(R.id.recipe_instructions);
         longDescriptionView.setText(selectedStep.getDescription());
 
         // Initialize the player view.
+        if ((selectedStep.getVideoUrl() != null) && (!selectedStep.getVideoUrl().isEmpty())) {
         mPlayerView = rootView.findViewById(R.id.playerView);
         mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
-        if ((selectedStep.getVideoUrl() != null) && (!selectedStep.getVideoUrl().isEmpty())) {
+//        if ((selectedStep.getVideoUrl() != null) && (!selectedStep.getVideoUrl().isEmpty())) {
             initializePlayer(Uri.parse(selectedStep.getVideoUrl()));
         }
 

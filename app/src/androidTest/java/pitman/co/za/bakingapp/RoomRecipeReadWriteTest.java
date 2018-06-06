@@ -53,6 +53,6 @@ public class RoomRecipeReadWriteTest {
     }
 
     private Recipe getRecipe() {
-        return new Recipe("id", "Test Recipe");
+        return new Recipe("id", "Test Recipe", "8", "");
     }
 }

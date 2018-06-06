@@ -52,6 +52,12 @@ public class RecipeIngredientsActivityFragment extends Fragment {
             selectedRecipe = savedInstanceState.getParcelable("selectedRecipe");
             Log.d(LOG_TAG, "recipe retrieved from savedInstanceState");
 
+        // Fragment instantiated from RecipeSkeletonActivity, in master-detail layout
+        } else if (this.getArguments() != null) {
+            Bundle arguments = this.getArguments();
+            selectedRecipe = arguments.getParcelable("selectedRecipe");
+
+        // Fragment instantiated by RecipeIngredientsActivity, as stand-along fragment
         } else {
             Intent intent = getActivity().getIntent();
             if ((intent != null)) {
