@@ -1,40 +1,52 @@
 package pitman.co.za.bakingapp.domainObjects;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Michael on 2018/01/24.
  */
-
+@Entity(tableName = "recipe_ingredient",
+        primaryKeys = {"parentRecipe", "ingredient"},
+        foreignKeys = @ForeignKey(
+                entity = Recipe.class,
+                parentColumns = "recipeName",
+                childColumns = "parentRecipe"))
 public class Ingredient implements Parcelable {
 
+    @NonNull
+    private String parentRecipe;
+    @NonNull
+    private String ingredient;
     private String quantity;
     private String measure;
-    private String ingredient;
+
+    public Ingredient(@NonNull String parentRecipe, String quantity, String measure, @NonNull String ingredient) {
+        this.parentRecipe = parentRecipe;
+        this.quantity = quantity;
+        this.measure = measure;
+        this.ingredient = ingredient;
+    }
+
+    @NonNull
+    public String getParentRecipe() {
+        return parentRecipe;
+    }
 
     public String getQuantity() {
         return quantity;
-    }
-
-    public void setQuantity(String quantity) {
-        this.quantity = quantity;
     }
 
     public String getMeasure() {
         return measure;
     }
 
-    public void setMeasure(String measure) {
-        this.measure = measure;
-    }
-
+    @NonNull
     public String getIngredient() {
         return ingredient;
-    }
-
-    public void setIngredient(String ingredient) {
-        this.ingredient = ingredient;
     }
 
     @Override
@@ -49,7 +61,7 @@ public class Ingredient implements Parcelable {
         parcel.writeString(this.ingredient);
     }
 
-    public Ingredient() {}
+//    public Ingredient() {}
 
     protected Ingredient(Parcel in) {
         this.quantity = in.readString();

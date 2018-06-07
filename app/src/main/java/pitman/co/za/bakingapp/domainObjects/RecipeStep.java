@@ -1,58 +1,65 @@
 package pitman.co.za.bakingapp.domainObjects;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 
 /**
  * Created by Michael on 2018/01/24.
+ *
+ * Note to self: room doesn't allow entity objects to reference each other
+ * https://developer.android.com/training/data-storage/room/defining-data
  */
-
+@Entity(tableName = "recipe_step",
+        primaryKeys = {"parentRecipe", "stepNumber"},
+        foreignKeys = @ForeignKey(
+                entity = Recipe.class,
+                parentColumns = "recipeName",
+                childColumns = "parentRecipe"))
 public class RecipeStep implements Parcelable {
 
-    private String id;
-    private String shortDesciption;
+    @NonNull
+    private String parentRecipe;
+    private String shortDescription;
+    private int stepNumber;
     private String description;
     private String videoUrl;
     private String thumbnailUrl;
 
-    public String getId() {
-        return id;
+    public RecipeStep(@NonNull String parentRecipe, String shortDescription, int stepNumber, String description, String videoUrl, String thumbnailUrl) {
+        this.parentRecipe = parentRecipe;
+        this.shortDescription = shortDescription;
+        this.stepNumber = stepNumber;
+        this.description = description;
+        this.videoUrl = videoUrl;
+        this.thumbnailUrl = thumbnailUrl;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @NonNull
+    public String getParentRecipe() {
+        return parentRecipe;
     }
 
-    public String getShortDesciption() {
-        return shortDesciption;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setShortDesciption(String shortDesciption) {
-        this.shortDesciption = shortDesciption;
+    public int getStepNumber() {
+        return stepNumber;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getVideoUrl() {
         return videoUrl;
     }
 
-    public void setVideoUrl(String videoUrl) {
-        this.videoUrl = videoUrl;
-    }
-
     public String getThumbnailUrl() {
         return thumbnailUrl;
-    }
-
-    public void setThumbnailUrl(String thumbnailUrl) {
-        this.thumbnailUrl = thumbnailUrl;
     }
 
     @Override
@@ -62,19 +69,21 @@ public class RecipeStep implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.id);
-        parcel.writeString(this.shortDesciption);
+        parcel.writeString(this.parentRecipe);
+        parcel.writeString(this.shortDescription);
+        parcel.writeInt(this.stepNumber);
         parcel.writeString(this.description);
         parcel.writeString(this.videoUrl);
         parcel.writeString(this.thumbnailUrl);
     }
 
-    public RecipeStep() {
-    }
+//    public RecipeStep() {
+//    }
 
     protected RecipeStep(Parcel in) {
-        this.id = in.readString();
-        this.shortDesciption = in.readString();
+        this.parentRecipe = in.readString();
+        this.shortDescription = in.readString();
+        this.stepNumber = in.readInt();
         this.description = in.readString();
         this.videoUrl = in.readString();
         this.thumbnailUrl = in.readString();

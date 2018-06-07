@@ -16,7 +16,9 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleTop">
+            <!--https://stackoverflow.com/questions/20819019/why-is-ondestroy-always-called-when-returning-to-parent-activity-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -26,7 +28,9 @@
         <activity
             android:name=".RecipeSkeletonActivity"
             android:label="@string/recipe_overview"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity"
+            android:launchMode="singleTop">
+            <!--https://stackoverflow.com/questions/20819019/why-is-ondestroy-always-called-when-returning-to-parent-activity-->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pitman.co.za.bakingapp.MainActivity"/>
@@ -53,9 +57,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="pitman.co.za.bakingapp.RecipeSkeletonActivity"/>
         </activity>
-
-        <provider android:authorities="pitman.co.za.bakingapp"
-                  android:name=".data.RecipesProvider"/>
 
     </application>
 
