@@ -160,13 +160,11 @@ public class MainActivityFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             TextView textView = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card_recipe_name, parent, false);
-            Log.d(LOG_TAG, "onCreateViewHolder - viewHolder created");
             return new ViewHolder(textView);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            Log.d(LOG_TAG, "calling onBindViewHolder");
             holder.bindRecipe(mRecipeListing.get(position));
         }
 
@@ -215,17 +213,10 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-//            LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View gridview;
 
             if (convertView == null) {
-
-                // get layout
-//                gridview = inflater.inflate(R.layout.thumbnail_imageview, null);
-//                TextView textView = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card_recipe_name, parent, false);
                 gridview = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card_recipe_name, parent, false);
-
             } else {
                 gridview = (View) convertView;
             }
@@ -257,7 +248,7 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            Toast.makeText(getActivity(), this.recipeListTextView.getText() + " selected", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), this.recipeListTextView.getText() + " selected", Toast.LENGTH_SHORT).show();
             mCallbacks.onRecipeSelected(mRecipe);
         }
 

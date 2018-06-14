@@ -15,7 +15,7 @@ import pitman.co.za.bakingapp.domainObjects.Recipe;
  * Created by Michael on 2018/02/13.
  */
 
-public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeSkeletonActivityFragment.Callbacks {
+public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeSkeletonActivityFragment.Callbacks, RecipeStepActivityFragment.Callbacks {
 
     private static String LOG_TAG = RecipeSkeletonActivity.class.getSimpleName();
     private Recipe selectedRecipe;
@@ -125,6 +125,9 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
         mRecipeViewModel.setSelectedRecipe(selectedRecipe);
     }
 
+    // This should never be called
+    @Override
+    public void onRecipeStepChange(Recipe selectedRecipe, int newStepNumber) {}
 
 //  Lifecycle events overridden to help follow flow-of-execution where necessary
     @Override

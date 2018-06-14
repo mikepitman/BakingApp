@@ -78,10 +78,6 @@ public class RecipeSkeletonActivityFragment extends Fragment {
             }
         }
 
-        if (selectedRecipe == null) {                   // todo: remove this debug step before finishing
-            Log.d(LOG_TAG, "selectedRecipe is null");
-        }
-
         recipeSkeletonAdapter = new ArrayAdapter<String>(
                 this.getActivity().getApplicationContext(),
                 R.layout.recipe_skeleton_textview,
