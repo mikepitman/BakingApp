@@ -111,6 +111,7 @@ public class RecipeStepActivityFragment extends Fragment {
             if ((intent != null)) {
                 mSelectedRecipe = intent.getParcelableExtra("recipe");
                 mRecipeStepIndex = intent.getIntExtra("selectedStep", 0);
+                isTablet = false;
             }
         }
 

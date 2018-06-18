@@ -33,11 +33,11 @@ public class RecipeIngredientsActivityFragment extends Fragment {
         Log.d(LOG_TAG, "RecipeIngredientsActivityFragment() constructor called");
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putParcelable("selectedRecipe", selectedRecipe);
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("selectedRecipe", selectedRecipe);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,8 +45,6 @@ public class RecipeIngredientsActivityFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_ingredients_list, container, false);
         mRecipeRecyclerView = (RecyclerView) rootView.findViewById(R.id.ingredients_list);
         mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        Log.d(LOG_TAG, "onCreateView() in RecipeIngredientsActivityFragment called");
 
         if (savedInstanceState != null) {
             selectedRecipe = savedInstanceState.getParcelable("selectedRecipe");
@@ -90,13 +88,11 @@ public class RecipeIngredientsActivityFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card_ingredient, parent, false);
-            Log.d(LOG_TAG, "onCreateViewHolder - viewHolder created");
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(RecipeIngredientsActivityFragment.ViewHolder holder, int position) {
-            Log.d(LOG_TAG, "calling onBindViewHolder");
             holder.bindIngredient(mIngredientsListing.get(position));
         }
     }
@@ -117,7 +113,7 @@ public class RecipeIngredientsActivityFragment extends Fragment {
         public void bindIngredient(Ingredient ingredient) {
             this.ingredientNameTextView.setText(ingredient.getIngredient());
             this.ingredientMeasureTextView.setText(ingredient.getMeasure());
-            this.ingredientQuantityTextView.setText(ingredient.getQuantity());
+            this.ingredientQuantityTextView.setText(ingredient.getQuantity() + " ");
         }
     }
 }

@@ -101,6 +101,7 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
             Bundle bundle = new Bundle();
             bundle.putParcelable("selectedRecipe", selectedRecipe);
             bundle.putInt("selectedItemPosition", (selectedItemPosition - 1));
+            bundle.putBoolean("isTablet", true);
             recipeStepFragment.setArguments(bundle);
 
             getSupportFragmentManager().beginTransaction()
