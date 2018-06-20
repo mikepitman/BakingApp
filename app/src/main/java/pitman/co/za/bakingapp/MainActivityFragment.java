@@ -40,7 +40,6 @@ public class MainActivityFragment extends Fragment {
     public static RecipeCardAdapter mAdapter;
 
     public MainActivityFragment() {
-        Log.d(LOG_TAG, "MainActivityFragment constructor called");
     }
 
     //// Callbacks-related code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

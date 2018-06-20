@@ -37,7 +37,6 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
     @Override
     protected void onPostExecute(ArrayList<Recipe> recipes) {
         super.onPostExecute(recipes);
-        Log.d(LOG_TAG, "passing arrayList of results back to mainActivityFragment");
         mMainActivityFragment.generateRecipeAdapterWithData(recipes);
     }
 
@@ -55,7 +54,6 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
                 .appendPath("59121517_baking")
                 .appendPath("baking.json");
         String myUrl = builder.build().toString();
-        Log.d(LOG_TAG, "built URL for querying recipe: " + myUrl);
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -70,7 +68,6 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
 
-            Log.d(LOG_TAG, "network query being made");
             urlConnection.connect();
 
 
@@ -161,7 +158,6 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
                     recipe_obj.getString(JSON_RECIPE_SERVINGS),
                     recipe_obj.getString(JSON_RECIPE_IMAGE));
 
-            Log.d(LOG_TAG, "id, name: " + recipe.getRecipeId() + ", " + recipe.getRecipeName());
 
             JSONArray ingredientsArray = recipe_obj.getJSONArray(JSON_RECIPE_INGREDIENTS_ARRAY);
             if (ingredientsArray != null) {
