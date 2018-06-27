@@ -1,9 +1,12 @@
 package pitman.co.za.bakingapp.data;
 
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import pitman.co.za.bakingapp.domainObjects.Ingredient;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
@@ -27,10 +30,21 @@ public abstract class RecipeRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             RecipeRoomDatabase.class, "recipe_database")
+                            .fallbackToDestructiveMigration()
+//                            .addMigrations(MIGRATION_1_2)
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
+
+    // Procedure to change versions provided below
+    // https://medium.com/google-developers/understanding-migrations-with-room-f01e04b07929
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+//            database.execSQL("appropriate sql to migrate database");
+        }
+    };
 }
