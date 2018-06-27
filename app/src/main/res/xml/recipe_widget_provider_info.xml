@@ -3,9 +3,9 @@
                     android:initialKeyguardLayout="@layout/recipe_widget_provider"
                     android:initialLayout="@layout/recipe_widget_provider"
                     android:minHeight="40dp"
-                    android:minWidth="160dp"
-                    android:previewImage="@drawable/example_appwidget_preview"
-                    android:resizeMode="vertical"
+                    android:minWidth="200dp"
+                    android:previewImage="@drawable/baking_app_preview"
+                    android:resizeMode="vertical|horizontal"
                     android:updatePeriodMillis="1800000"
                     android:widgetCategory="home_screen">
 </appwidget-provider>

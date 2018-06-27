@@ -126,7 +126,7 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
         mRecipeViewModel.setSelectedRecipe(selectedRecipe);
     }
 
-    // This should never be called
+    // This should never be called, but provided here to comply with RecipeStepActivityFragment.Callbacks requirements
     @Override
     public void onRecipeStepChange(Recipe selectedRecipe, int newStepNumber) {}
 

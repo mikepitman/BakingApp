@@ -56,6 +56,7 @@ public class Ingredient implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(this.parentRecipe);
         parcel.writeString(this.quantity);
         parcel.writeString(this.measure);
         parcel.writeString(this.ingredient);
@@ -63,7 +64,9 @@ public class Ingredient implements Parcelable {
 
 //    public Ingredient() {}
 
-    protected Ingredient(Parcel in) {
+//    protected Ingredient(Parcel in) {
+    public Ingredient(Parcel in) {
+        this.parentRecipe = in.readString();
         this.quantity = in.readString();
         this.measure= in.readString();
         this.ingredient= in.readString();

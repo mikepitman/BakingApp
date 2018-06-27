@@ -1,5 +1,6 @@
 package pitman.co.za.bakingapp;
 
+import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
@@ -10,6 +11,7 @@ import android.util.Log;
 
 import butterknife.ButterKnife;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
+import pitman.co.za.bakingapp.widget.RecipeWidgetProvider;
 
 
 public class MainActivity extends AppCompatActivity implements MainActivityFragment.Callbacks {
@@ -56,6 +58,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         recipeDetailIntent.putExtra("selectedRecipe", recipe);
         recipeDetailIntent.putExtra("isTablet", mIsTablet);
         startActivity(recipeDetailIntent);
+
+        // Once recipe is selected, update the widget with ingredients for the newly selected recipe
+        // https://stackoverflow.com/questions/3455123/programmatically-update-widget-from-activity-service-receiver
+        Intent updateWidgetIntent = new Intent(this, RecipeWidgetProvider.class);
+        updateWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+//        widgetIntentArgs.putParcelableArrayList("selectedRecipeIngredients", recipe.getIngredients());
+        updateWidgetIntent.putParcelableArrayListExtra("ingredients", recipe.getIngredients());
+        Log.d(LOG_TAG, "ingredients shown for recipe " + recipe.getRecipeName() + ", called from MainActivity");
+
+        this.sendBroadcast(updateWidgetIntent);
     }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

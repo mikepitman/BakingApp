@@ -1,46 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#09C"
-                android:padding="@dimen/widget_margin">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/colorPrimaryDark">
+              <!--android:background="@android:color/black">-->
 
-<!-- todo: change this to a ListView, and create another layout for widget with same layout as ingredient listing in the app -->
+    <ListView
+        android:id="@+id/recipeWidgetListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
+    <!-- Empty view is show if list items are empty -->
     <TextView
-        android:id="@+id/appwidget_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="#09C"
-        android:contentDescription="@string/appwidget_text"
-        android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:textStyle="bold|italic"/>
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/empty_string"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:visibility="gone" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/appwidget_text"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ingredient_quantity"
-            android:textColor="#ffffff"
-            android:textSize="24sp"
-            android:textStyle="bold|italic"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/ingredient_measure"
-            android:textColor="#ffffff"
-            android:textSize="24sp"
-            android:textStyle="bold|italic"/>
-
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

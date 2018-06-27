@@ -80,7 +80,8 @@ public class RecipeStep implements Parcelable {
 //    public RecipeStep() {
 //    }
 
-    protected RecipeStep(Parcel in) {
+//    protected RecipeStep(Parcel in) {
+    public RecipeStep(Parcel in) {
         this.parentRecipe = in.readString();
         this.shortDescription = in.readString();
         this.stepNumber = in.readInt();
