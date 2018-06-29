@@ -1,5 +1,6 @@
 package pitman.co.za.bakingapp.widget;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
@@ -8,10 +9,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import pitman.co.za.bakingapp.MainActivity;
 import pitman.co.za.bakingapp.R;
 import pitman.co.za.bakingapp.domainObjects.Ingredient;
 
@@ -32,20 +33,15 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));  // ? what's this for?
 
-        ArrayList<String> ingredientsNameList = new ArrayList<>();
-        for (Ingredient ingredient : widgetIngredients) {
-            ingredientsNameList.add(ingredient.getIngredient());
-        }
-        intent.putStringArrayListExtra("ingredients", ingredientsNameList);
-        Log.d(LOG_TAG, "number of ingredients in String list: " + ingredientsNameList.size());
-
         views.setRemoteAdapter(R.id.recipeWidgetListView, intent);
-//        views.setRemoteAdapter(appWidgetId, R.id.recipeWidgetListView, intent);
-
-//        views.setEmptyView(R.id.recipeWidgetListView, R.id.empty_view);
         views.setEmptyView(R.layout.recipe_widget_provider, R.id.empty_view);
 
-        // Instruct the widget manager to update the widget
+        // Open the app when user clicks on the widget
+        Intent widgetClickedIntent = new Intent(context, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, widgetClickedIntent, 0);
+        views.setOnClickPendingIntent(R.id.widgetLayout, pendingIntent);
+
+//        // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
 
         // https://stackoverflow.com/questions/42129390/onupdate-not-calling-the-widget-service
@@ -57,7 +53,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         for (int appWidgetId : appWidgetIds) {      // There may be multiple widgets active, so update all of them
             updateAppWidget(context, appWidgetManager, appWidgetId);
-            Toast.makeText(context, "Widget has been updated! ", Toast.LENGTH_SHORT).show();        // todo: debug
         }
         super.onUpdate(context, appWidgetManager, appWidgetIds);
     }
@@ -77,21 +72,10 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
         super.onReceive(context, intent);
         Log.d(LOG_TAG, "intent received in RecipeWidgetProvider for updating");
 
-        widgetIngredients = intent.getParcelableArrayListExtra("ingredients");
-
-//        Bundle bundle = intent.getBundleExtra("bundle");
-        if (widgetIngredients != null) {
-//        if (bundle != null) {
-//            widgetIngredients = bundle.getParcelableArrayList("selectedRecipeIngredients");
-            Log.d(LOG_TAG, "number of ingredients in recipe: " + widgetIngredients.size());
-
-            final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            final ComponentName thisAppWidget = new ComponentName(context.getPackageName(), RecipeWidgetProvider.class.getName());
-            final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
-            onUpdate(context, appWidgetManager, appWidgetIds);
-        } else {
-            Log.d(LOG_TAG, "widgetIngredients is null from intent");
-        }
+        final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        final ComponentName thisAppWidget = new ComponentName(context.getPackageName(), RecipeWidgetProvider.class.getName());
+        final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
+        onUpdate(context, appWidgetManager, appWidgetIds);
     }
 }
 

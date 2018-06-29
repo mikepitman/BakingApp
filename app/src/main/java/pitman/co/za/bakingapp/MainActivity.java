@@ -1,7 +1,9 @@
 package pitman.co.za.bakingapp;
 
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.LayoutRes;
 import android.support.v4.app.Fragment;
@@ -64,9 +66,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         Intent updateWidgetIntent = new Intent(this, RecipeWidgetProvider.class);
         updateWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
-//        widgetIntentArgs.putParcelableArrayList("selectedRecipeIngredients", recipe.getIngredients());
-        updateWidgetIntent.putParcelableArrayListExtra("ingredients", recipe.getIngredients());
-        Log.d(LOG_TAG, "ingredients shown for recipe " + recipe.getRecipeName() + ", called from MainActivity");
+        SharedPreferences sharedPreferences = this.getSharedPreferences("pitman.co.za.bakingapp", Context.MODE_PRIVATE);
+        sharedPreferences.edit().putString("selectedRecipe", recipe.getRecipeName()).apply();
 
         this.sendBroadcast(updateWidgetIntent);
     }
@@ -75,33 +76,33 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
 //// Activity lifecycle methods for debugging/understanding/etc //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Log.d(LOG_TAG, "onNewIntent()");
-    }
+        @Override
+        public void onNewIntent(Intent intent) {
+            super.onNewIntent(intent);
+            Log.d(LOG_TAG, "onNewIntent()");
+        }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(LOG_TAG, "onResume()");
-    }
+        @Override
+        public void onResume () {
+            super.onResume();
+            Log.d(LOG_TAG, "onResume()");
+        }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(LOG_TAG, "onPause()");
-    }
+        @Override
+        public void onPause () {
+            super.onPause();
+            Log.d(LOG_TAG, "onPause()");
+        }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d(LOG_TAG, "onStop()");
-    }
+        @Override
+        public void onStop () {
+            super.onStop();
+            Log.d(LOG_TAG, "onStop()");
+        }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.d(LOG_TAG, "onDestroy()");
+        @Override
+        public void onDestroy () {
+            super.onDestroy();
+            Log.d(LOG_TAG, "onDestroy()");
+        }
     }
-}

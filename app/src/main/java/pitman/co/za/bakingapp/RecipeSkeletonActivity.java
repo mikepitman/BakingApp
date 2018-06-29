@@ -123,7 +123,7 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
         }
 
         RecipeViewModel mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-        mRecipeViewModel.setSelectedRecipe(selectedRecipe);
+//        mRecipeViewModel.setSelectedRecipe(selectedRecipe);
     }
 
     // This should never be called, but provided here to comply with RecipeStepActivityFragment.Callbacks requirements

@@ -24,7 +24,7 @@ public abstract class RecipeRoomDatabase extends RoomDatabase {
 
     private static RecipeRoomDatabase INSTANCE;
 
-    static RecipeRoomDatabase getDatabase(final Context context) {
+    public static RecipeRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (RecipeRoomDatabase.class) {
                 if (INSTANCE == null) {

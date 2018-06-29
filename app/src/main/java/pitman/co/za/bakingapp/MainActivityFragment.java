@@ -175,7 +175,6 @@ public class MainActivityFragment extends Fragment {
                 mRecipeListing = new ArrayList<Recipe>();
             }
             mRecipeListing.addAll(recipes);
-            Log.d(LOG_TAG, "data swapped out! " + numberOfOldEntries + " items removed, items added: " + recipes.size());
             notifyDataSetChanged();
         }
     }
@@ -247,7 +246,6 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-//            Toast.makeText(getActivity(), this.recipeListTextView.getText() + " selected", Toast.LENGTH_SHORT).show();
             mCallbacks.onRecipeSelected(mRecipe);
         }
 

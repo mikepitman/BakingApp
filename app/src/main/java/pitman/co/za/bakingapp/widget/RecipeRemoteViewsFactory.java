@@ -3,13 +3,16 @@ package pitman.co.za.bakingapp.widget;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import pitman.co.za.bakingapp.R;
+import pitman.co.za.bakingapp.data.RecipeDao;
+import pitman.co.za.bakingapp.data.RecipeRoomDatabase;
+import pitman.co.za.bakingapp.domainObjects.Ingredient;
 
 /* Sourced in part(s) from
  * https://laaptu.wordpress.com/2013/07/19/android-app-widget-with-listview/
@@ -20,7 +23,7 @@ import pitman.co.za.bakingapp.R;
 public class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
     private static final String LOG_TAG = RecipeRemoteViewsFactory.class.getSimpleName();
-    private ArrayList<String> ingredientsList;
+    private List<Ingredient> mList;
     private Context context;
     private int appWidgetId;
 
@@ -29,28 +32,33 @@ public class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         appWidgetId = intent.getIntExtra(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID);
-//        this.ingredientsList = intent.getParcelableArrayListExtra("ingredients");
-        this.ingredientsList = intent.getStringArrayListExtra("ingredients");
-
-        Log.d(LOG_TAG, "constructor called, number of ingredients: " + ingredientsList.size());
     }
 
     @Override
     public void onCreate() {
     }
 
+    /* Get the current selected recipe name from SharedPreferences, and get the ingredients for that recipe from the room database.
+     * onDataSetChanged() seems the only way to get new data into the factory to display in the widget */
     @Override
     public void onDataSetChanged() {
+        RecipeRoomDatabase db = RecipeRoomDatabase.getDatabase(context);
+        RecipeDao dao = db.recipeDao();
+
+        SharedPreferences sharedPreferences = context.getSharedPreferences("pitman.co.za.bakingapp", Context.MODE_PRIVATE);
+
+        String selectedRecipeName = sharedPreferences.getString("selectedRecipe", "");
+        mList = dao.getRecipeIngredients(selectedRecipeName);
     }
 
     @Override
     public void onDestroy() {
-        ingredientsList.clear();
+        mList.clear();
     }
 
     @Override
     public int getCount() {
-        return ingredientsList == null ? 0 : ingredientsList.size();
+        return mList == null ? 0 : mList.size();
     }
 
     @Override
@@ -58,12 +66,10 @@ public class RecipeRemoteViewsFactory implements RemoteViewsService.RemoteViewsF
         final RemoteViews remoteView = new RemoteViews(
                 context.getPackageName(),
                 R.layout.recipe_widget_list_item);
-//        Ingredient ingredient = ingredientsList.get(position);
-        String ingredient = ingredientsList.get(position);
-        remoteView.setTextViewText(R.id.ingredient_name, ingredient);
-        Log.d(LOG_TAG, "new remote view created with text " + ingredient);
-//        remoteView.setTextViewText(R.id.ingredient_quantity, ingredient.getQuantity());
-//        remoteView.setTextViewText(R.id.ingredient_measure, ingredient.getMeasure());
+        Ingredient ingredient = mList.get(position);
+        remoteView.setTextViewText(R.id.ingredient_name, ingredient.getIngredient());
+        remoteView.setTextViewText(R.id.ingredient_quantity, ingredient.getQuantity());
+        remoteView.setTextViewText(R.id.ingredient_measure, ingredient.getMeasure());
 
         return remoteView;
     }

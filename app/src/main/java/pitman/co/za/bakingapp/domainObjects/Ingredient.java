@@ -62,9 +62,6 @@ public class Ingredient implements Parcelable {
         parcel.writeString(this.ingredient);
     }
 
-//    public Ingredient() {}
-
-//    protected Ingredient(Parcel in) {
     public Ingredient(Parcel in) {
         this.parentRecipe = in.readString();
         this.quantity = in.readString();
