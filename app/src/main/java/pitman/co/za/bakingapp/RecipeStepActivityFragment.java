@@ -36,7 +36,6 @@ import pitman.co.za.bakingapp.domainObjects.RecipeStep;
  * // https://github.com/tonynguyen0523/Baking-App/blob/master/app/src/main/java/com/swipeacademy/kissthebaker/BakingInstructions/DirectionsFragment.java
  */
 
-//public class RecipeStepActivityFragment extends Fragment implements ExoPlayer.EventListener {
 public class RecipeStepActivityFragment extends Fragment {
 
     private static String LOG_TAG = RecipeStepActivityFragment.class.getSimpleName();
@@ -45,8 +44,6 @@ public class RecipeStepActivityFragment extends Fragment {
     private int mRecipeStepIndex;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mPlayerView;
-    //    private static MediaSessionCompat mMediaSession;
-//    private PlaybackStateCompat.Builder mStateBuilder;
     private long playerCurrentPosition = 0;
     private long playerStoppedPosition = 0;
     private boolean currentlyPlaying = false;
@@ -87,7 +84,7 @@ public class RecipeStepActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(LOG_TAG, "3. onCreateView()");
 
-        rootView = inflater.inflate(R.layout.activity_recipe_step, container, false);
+        rootView = inflater.inflate(R.layout.fragment_recipe_step, container, false);
         Log.d(LOG_TAG, "onCreateView() in RecipeStepActivityFragment called");
 
         if (savedInstanceState != null) {

@@ -23,7 +23,7 @@ public class RecipeStepActivity extends AppCompatActivity implements RecipeStepA
         super.onCreate(savedInstanceState);
 
         Log.d(LOG_TAG, "onCreate() in RecipeStepActivity");
-        setContentView(R.layout.activity_recipe_step);
+        setContentView(R.layout.fragment_recipe_step);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FragmentManager fm = getSupportFragmentManager();
