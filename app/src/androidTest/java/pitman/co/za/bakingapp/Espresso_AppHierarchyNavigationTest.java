@@ -3,7 +3,11 @@ package pitman.co.za.bakingapp;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +17,10 @@ import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.is;
 
@@ -97,10 +102,11 @@ public class Espresso_AppHierarchyNavigationTest {
                 .perform(click());
 
         // Verify RecipeStep is displayed
-        onView(withText("Recipe Introduction")).check(matches(isDisplayed()));
+        onView(allOf(getElementByPosition(allOf(withId(R.id.nextStepButton)), 0), isClickable()));
 
-        onView(withId(R.id.recipe_instructions)).check(matches(withText("Recipe Introduction")));
-//        onView(withId(R.id.nextStepButton)).check(matches(withText()));
+        // Verify the recipe instructions are displayed.
+        // Espresso trips over the use of a view ID to direct layout in a relativeLayout, so use a matcher to retrieve the specific instance
+        onView(allOf(getElementByPosition(allOf(withId(R.id.recipe_instructions)), 1))).check(matches(withText("Recipe Introduction")));
 
         // Return to recipe skeleton
         Espresso.pressBack();
@@ -112,6 +118,31 @@ public class Espresso_AppHierarchyNavigationTest {
         // Press backButton to return to Recipe menu
         Espresso.pressBack();
         onData(is("Brownies")).inAdapterView(withId(R.id.recipe_cards_rv));
+    }
+
+    // Keep getting multiple matches for a view with only a single instance in the view file, so use a matcher to retrieve specific instance of a match
+    // https://stackoverflow.com/questions/32387137/espresso-match-first-element-found-when-many-are-in-hierarchy
+    private static Matcher<View> getElementByPosition(final Matcher<View> matcher, final int position) {
+        return new BaseMatcher<View>() {
+            int counter = 0;
+
+            @Override
+            public boolean matches(Object item) {
+                if (matcher.matches(item)) {
+                    if (counter == position) {
+                        counter++;
+                        return true;
+                    }
+                    counter++;
+                }
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("Element at position: " + position);
+            }
+        };
     }
 }
 
