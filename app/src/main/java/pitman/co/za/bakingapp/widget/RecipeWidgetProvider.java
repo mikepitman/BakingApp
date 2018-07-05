@@ -7,7 +7,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import java.util.ArrayList;
@@ -70,7 +69,6 @@ public class RecipeWidgetProvider extends AppWidgetProvider {
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
-        Log.d(LOG_TAG, "intent received in RecipeWidgetProvider for updating");
 
         final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
         final ComponentName thisAppWidget = new ComponentName(context.getPackageName(), RecipeWidgetProvider.class.getName());
