@@ -1,6 +1,5 @@
 package pitman.co.za.bakingapp;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import pitman.co.za.bakingapp.data.RecipeViewModel;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
 
 /**
@@ -87,11 +85,6 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
         }
     }
 
-//    @Override
-//    protected boolean onOptionsItemSelected(MenuItem item) {
-//
-//    }
-
     public void onSkeletonItemSelected(int selectedItemPosition) {          // callbacks method to launch intent to view recipe ingredients or selected recipe step
         Log.d(LOG_TAG, "position returned: " + selectedItemPosition);
 
@@ -121,9 +114,6 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
                 startActivity(recipeStepIntent);
             }
         }
-
-        RecipeViewModel mRecipeViewModel = ViewModelProviders.of(this).get(RecipeViewModel.class);
-//        mRecipeViewModel.setSelectedRecipe(selectedRecipe);
     }
 
     // This should never be called, but provided here to comply with RecipeStepActivityFragment.Callbacks requirements
@@ -135,8 +125,6 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
     public void onResume() {
         super.onResume();
 //        Log.d(LOG_TAG, "onResume()");
-
-        // todo: from Sunshine, put method on RecipeIngredientsFragmentActivity to set ingredients list, called from this lifecycle method
     }
 
     @Override

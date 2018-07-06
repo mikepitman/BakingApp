@@ -64,7 +64,6 @@ public class RecipeIngredientsActivityFragment extends Fragment {
                 Log.d(LOG_TAG, "number of ingredients: " + ingredients.size());
             }
         }
-        Log.d(LOG_TAG, "is selectedRecipe null? " + (selectedRecipe == null));
         mAdapter = new RecipeIngredientsActivityFragment.IngredientCardAdapter(selectedRecipe.getIngredients());
         mRecipeRecyclerView.setAdapter(mAdapter);
 
@@ -113,7 +112,8 @@ public class RecipeIngredientsActivityFragment extends Fragment {
         public void bindIngredient(Ingredient ingredient) {
             this.ingredientNameTextView.setText(ingredient.getIngredient());
             this.ingredientMeasureTextView.setText(ingredient.getMeasure());
-            this.ingredientQuantityTextView.setText(ingredient.getQuantity() + " ");
+            String quantityString = ingredient.getQuantity() + " ";
+            this.ingredientQuantityTextView.setText(quantityString);
         }
     }
 }

@@ -101,7 +101,7 @@ public class RecipeStepActivityFragment extends Fragment {
             Bundle arguments = this.getArguments();
             mSelectedRecipe = arguments.getParcelable("selectedRecipe");
             mRecipeStepIndex = arguments.getInt("selectedItemPosition");
-            isTablet = arguments.getBoolean("isTablet");    // todo: not necessarily the case...if called from RecipeStepActivity due to previous/next button selected, will also execute
+            isTablet = arguments.getBoolean("isTablet");
 
             // Fragment instantiated by RecipeStepActivity, as stand-alone fragment
         } else {
@@ -236,31 +236,6 @@ public class RecipeStepActivityFragment extends Fragment {
             mExoPlayer.seekTo(0);
         }
     }
-
-
-    /*
-     * Method that is called when the ExoPlayer state changes. Used to update the MediaSession
-     * PlayBackState to keep in sync, and post the media notification.
-     * @param playWhenReady true if ExoPlayer is playing, false if it's paused.
-     * @param playbackState int describing the state of ExoPlayer. Can be STATE_READY, STATE_IDLE,
-     *                      STATE_BUFFERING, or STATE_ENDED.
-     */
-//    @Override
-//    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-//        if((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
-//            mStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
-//                    mExoPlayer.getCurrentPosition(), 1f);
-//        } else if((playbackState == ExoPlayer.STATE_READY)){
-//            mStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
-//                    mExoPlayer.getCurrentPosition(), 1f);
-//        }
-//        mMediaSession.setPlaybackState(mStateBuilder.build());
-////        showNotification(mStateBuilder.build());
-//    }
-//
-//    @Override
-//    public void onPlayerError(ExoPlaybackException error) {
-//    }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Fragment end-of-lifecycle methods - stop/tear-down media player components ///////////////////////////////////////////////////////////////////////

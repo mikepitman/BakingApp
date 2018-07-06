@@ -1,7 +1,6 @@
 package pitman.co.za.bakingapp.widget;
 
 import android.content.Intent;
-import android.util.Log;
 import android.widget.RemoteViewsService;
 
 public class RecipeWidgetRemoteViewsService extends RemoteViewsService {
@@ -10,7 +9,6 @@ public class RecipeWidgetRemoteViewsService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        Log.d(LOG_TAG, "returning new RemoteViewsFactory");
         return new RecipeRemoteViewsFactory(this.getApplicationContext(), intent);
     }
 }

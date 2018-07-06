@@ -42,7 +42,6 @@ public class RecipeSkeletonActivityFragment extends Fragment {
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-//        mContext = this.getActivity().getApplicationContext();
         mCallbacks = (Callbacks) activity;
     }
 
