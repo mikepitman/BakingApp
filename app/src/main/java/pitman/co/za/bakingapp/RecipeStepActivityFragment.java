@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -122,6 +123,7 @@ public class RecipeStepActivityFragment extends Fragment {
         TextView longDescriptionView = (TextView) rootView.findViewById(R.id.recipe_instructions);
         longDescriptionView.setText(selectedStep.getDescription());
         mPlayerView = rootView.findViewById(R.id.playerView);
+        ImageView thumbnailImageView = (ImageView) rootView.findViewById(R.id.thumbnail_image);
 
         // Video IRL may be empty, or empty but the video URL mistakenly in the image URL field, so check and copy it across
         String videoUrl = selectedStep.getVideoUrl();
@@ -134,10 +136,18 @@ public class RecipeStepActivityFragment extends Fragment {
         if (!videoUrl.isEmpty()) {
             mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
             initializePlayer(Uri.parse(videoUrl));
+            thumbnailImageView.setVisibility(View.GONE);
         } else {
             // Hint on setting the mPlayerView invisible if no video available
             assert mPlayerView != null;
             mPlayerView.setVisibility(View.GONE);
+
+            if (!imageUrl.isEmpty()) {
+                Uri thumbnailUri = Uri.parse(imageUrl);
+                thumbnailImageView.setImageURI(thumbnailUri);
+            } else {
+                thumbnailImageView.setVisibility(View.GONE);
+            }
         }
 
         Button backButton = (Button) rootView.findViewById(R.id.previousStepButton);
@@ -173,46 +183,6 @@ public class RecipeStepActivityFragment extends Fragment {
         super.onStart();
     }
 
-    // Taken from Udacity ClassicalMusicQuiz application
-    // https://medium.com/@yusufcakmak/playing-audio-and-video-with-exoplayer-2-4f4c2c2d9772 used as an additional source
-    // https://medium.com/google-exoplayer/customizing-exoplayers-ui-components-728cf55ee07a
-    // https://stackoverflow.com/questions/45481775/exoplayer-restore-state-when-resumed
-
-    /**
-     * Initializes the Media Session to be enabled with media buttons, transport controls, callbacks
-     * and media controller.
-     */
-//    private void initializeMediaSession() {
-//
-//        // Create a MediaSessionCompat.
-//        mMediaSession = new MediaSessionCompat(getActivity(), LOG_TAG);
-//
-//        // Enable callbacks from MediaButtons and TransportControls.
-//        mMediaSession.setFlags(
-//                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
-//                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-//
-//        // Do not let MediaButtons restart the player when the app is not visible.
-//        mMediaSession.setMediaButtonReceiver(null);
-//
-//        // Set an initial PlaybackState with ACTION_PLAY, so media buttons can start the player.
-//        mStateBuilder = new PlaybackStateCompat.Builder()
-//                .setActions(
-//                        PlaybackStateCompat.ACTION_PLAY |
-//                                PlaybackStateCompat.ACTION_PAUSE |
-//                                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
-//                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
-//
-//        mMediaSession.setPlaybackState(mStateBuilder.build());
-//
-//
-//        // MySessionCallback has methods that handle callbacks from a media controller.
-//        mMediaSession.setCallback(new MySessionCallback());
-//
-//        // Start the Media Session since the activity is active.
-//        mMediaSession.setActive(true);
-//    }
-
     /**
      * Initialize ExoPlayer.
      *
@@ -237,22 +207,6 @@ public class RecipeStepActivityFragment extends Fragment {
                 mExoPlayer.seekTo(playerStoppedPosition);
             }
         }
-
-
-//  https://stackoverflow.com/questions/45481775/exoplayer-restore-state-when-resumed
-//        private void initializePlayer(Uri mediaUri) {
-//            if (player == null) {
-//                TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveVideoTrackSelection.Factory(bandwidthMeter);
-//                DefaultTrackSelector trackSelector = new DefaultTrackSelector(mainHandler, videoTrackSelectionFactory);
-//                LoadControl loadControl = new DefaultLoadControl();
-//                player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
-//                simpleExoPlayerView.setPlayer(player);
-//                String userAgent = Util.getUserAgent(getContext(), "Baking App");
-//                MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(), null, null);
-//                player.prepare(mediaSource);
-//                player.setPlayWhenReady(true);
-//            }
-//        }
     }
 
     private void releasePlayer() {

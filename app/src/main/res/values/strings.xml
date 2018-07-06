@@ -6,6 +6,7 @@
     <string name="ingredients_listing">Ingredients Listing</string>
     <string name="recipe_steps">Recipe Steps</string>
     <string name="recipe_image">Recipe Image</string>
+    <string name="step_thumbnail">Step Thumbnail</string>
 
     <string name="previousStep">Previous Step</string>
     <string name="nextStep">Next Step</string>
