@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     android:textSize="22sp"
     android:textStyle="normal"
+    android:textColor="@color/Navy"
+    android:background="@color/Snow"
     android:gravity="center_vertical">
 
 </TextView>

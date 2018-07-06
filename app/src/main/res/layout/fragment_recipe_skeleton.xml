@@ -6,4 +6,5 @@
     android:textSize="22sp"
     android:textStyle="normal"
     android:textAlignment="center"
+    android:background="@color/Snow"
     android:layout_below="@+id/divider"/>

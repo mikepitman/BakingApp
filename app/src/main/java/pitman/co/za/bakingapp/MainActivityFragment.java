@@ -6,7 +6,9 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -158,13 +161,18 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            TextView textView = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card_recipe_name, parent, false);
-            return new ViewHolder(textView);
+            View recipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_card_recipe_name, parent, false);
+            return new ViewHolder(recipeView);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.bindRecipe(mRecipeListing.get(position));
+        }
+
+        @Override
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
         }
 
         public void swapData(List<Recipe> recipes) {
@@ -237,11 +245,13 @@ public class MainActivityFragment extends Fragment {
 
         private Recipe mRecipe;
         private TextView recipeListTextView;
+        private ImageView recipeImageView;
 
         ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             recipeListTextView = (TextView) itemView.findViewById(R.id.recipe_card);
+            recipeImageView = (ImageView) itemView.findViewById(R.id.recipe_image);
         }
 
         @Override
@@ -252,6 +262,13 @@ public class MainActivityFragment extends Fragment {
         public void bindRecipe(Recipe recipe) {
             this.mRecipe = recipe;
             this.recipeListTextView.setText(mRecipe.getRecipeName());
+
+            if (!mRecipe.getRecipeImage().isEmpty()) {
+                Uri imageUri = Uri.parse(mRecipe.getRecipeImage());
+                this.recipeImageView.setImageURI(imageUri);
+            } else {
+                this.recipeImageView.setVisibility(View.GONE);
+            }
         }
     }
 }

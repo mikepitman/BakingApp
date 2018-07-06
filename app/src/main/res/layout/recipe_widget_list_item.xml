@@ -3,16 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/Snow">
 
     <TextView
         android:id="@+id/ingredient_name"
         android:layout_width="273dp"
         android:layout_height="match_parent"
         android:layout_margin="8dp"
-        android:background="@color/colorPrimaryDark"
+
         android:contentDescription="@string/appwidget_text"
-        android:textColor="@android:color/white"
+        android:textColor="@color/Navy"
         android:textSize="20sp"
         android:textStyle="bold|italic"/>
 
@@ -26,7 +27,7 @@
             android:id="@+id/ingredient_quantity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@color/Navy"
             android:textSize="12sp"
             android:textStyle="italic"/>
 
@@ -34,7 +35,7 @@
             android:id="@+id/ingredient_measure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/white"
+            android:textColor="@color/Navy"
             android:textSize="12sp"
             android:textStyle="italic"/>
     </LinearLayout>
