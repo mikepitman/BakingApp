@@ -4,16 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pitman.co.za.bakingapp.domainObjects.Recipe;
 import pitman.co.za.bakingapp.domainObjects.RecipeStep;
@@ -29,7 +31,8 @@ public class RecipeSkeletonActivityFragment extends Fragment {
     private Recipe selectedRecipe;
     private Context mContext;
     private View rootView;
-    public static ArrayAdapter<String> recipeSkeletonAdapter;
+    private RecyclerView mRecipeRecyclerView;
+    public static RecipeSkeletonAdapter recipeSkeletonAdapter;
     private int selectedSkeletonPosition = 0;
 
     public RecipeSkeletonActivityFragment() {
@@ -77,31 +80,73 @@ public class RecipeSkeletonActivityFragment extends Fragment {
             }
         }
 
-        recipeSkeletonAdapter = new ArrayAdapter<String>(
-                this.getActivity().getApplicationContext(),
-                R.layout.recipe_skeleton_textview,
-                R.id.recipe_skeleton_textview,
-                new ArrayList<String>());
-        recipeSkeletonAdapter.clear();
-
-        recipeSkeletonAdapter.add("Ingredients");
+        List<String> skeletonParts = new ArrayList<>();
+        skeletonParts.add("Ingredients");
         for (RecipeStep step : selectedRecipe.getSteps()) {
-            String recipeCardText = step.getShortDescription();
-            recipeSkeletonAdapter.add(recipeCardText);
+            skeletonParts.add(step.getShortDescription());
         }
+        recipeSkeletonAdapter = new RecipeSkeletonAdapter(skeletonParts);
 
-        ListView listView = (ListView) rootView.findViewById(R.id.recipe_skeleton_list);
-        listView.setAdapter(recipeSkeletonAdapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectedSkeletonPosition = position;
-                mCallbacks.onSkeletonItemSelected(selectedSkeletonPosition);
-            }
-        });
+        mRecipeRecyclerView = (RecyclerView) rootView.findViewById(R.id.recipe_skeleton_rv);
+        mRecipeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecipeRecyclerView.setAdapter(recipeSkeletonAdapter);
 
         return rootView;
+    }
+
+    private class RecipeSkeletonAdapter extends RecyclerView.Adapter<ViewHolder> {
+
+        private String LOG_TAG = RecipeSkeletonActivityFragment.RecipeSkeletonAdapter.class.getSimpleName();
+        private List<String> mRecipeSteps;
+
+        private RecipeSkeletonAdapter(List<String> recipeRows) {
+            this.mRecipeSteps = recipeRows;
+        }
+
+        @Override
+        public int getItemCount() {
+            if (mRecipeSteps == null) {
+                return 0;
+            }
+            return mRecipeSteps.size();
+        }
+
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View recipeView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recipe_skeleton_textview, parent, false);
+            return new ViewHolder(recipeView);
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            holder.bindText(mRecipeSteps.get(position), position); }
+
+        @Override
+        public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
+        }
+    }
+
+    private class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+        private int position;
+        private TextView recipeListTextView;
+
+        ViewHolder(View itemView) {
+            super(itemView);
+            itemView.setOnClickListener(this);
+            recipeListTextView = (TextView) itemView.findViewById(R.id.recipe_skeleton_textview);
+        }
+
+        @Override
+        public void onClick(View view) {
+            mCallbacks.onSkeletonItemSelected(position);
+        }
+
+        public void bindText(String recipeStep, int position) {
+            this.recipeListTextView.setText(recipeStep);
+            this.position = position;
+        }
     }
 
     @Override

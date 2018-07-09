@@ -1,10 +1,8 @@
-<ListView
-    android:id="@+id/recipe_skeleton_list"
+<android.support.v7.widget.RecyclerView
+    android:id="@+id/recipe_skeleton_rv"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:textSize="22sp"
-    android:textStyle="normal"
-    android:textAlignment="center"
-    android:background="@color/Snow"
-    android:layout_below="@+id/divider"/>
+    android:layout_width='match_parent'
+    android:layout_height='wrap_content'
+    android:background="@color/Snow">
+
+</android.support.v7.widget.RecyclerView>

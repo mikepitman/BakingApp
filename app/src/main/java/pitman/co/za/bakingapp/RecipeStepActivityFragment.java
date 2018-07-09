@@ -133,7 +133,7 @@ public class RecipeStepActivityFragment extends Fragment {
         }
 
         // Initialize the player view.
-        if (!videoUrl.isEmpty()) {
+        if (!videoUrl.isEmpty() ) {
             mPlayerView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
             initializePlayer(Uri.parse(videoUrl));
             thumbnailImageView.setVisibility(View.GONE);
