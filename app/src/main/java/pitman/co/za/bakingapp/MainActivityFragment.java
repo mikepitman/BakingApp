@@ -261,10 +261,10 @@ public class MainActivityFragment extends Fragment {
 
         public void bindRecipe(Recipe recipe) {
             this.mRecipe = recipe;
-            this.recipeListTextView.setText(mRecipe.getRecipeName());
+            this.recipeListTextView.setText(mRecipe.getName());
 
-            if (!mRecipe.getRecipeImage().isEmpty()) {
-                Uri imageUri = Uri.parse(mRecipe.getRecipeImage());
+            if (!mRecipe.getImage().isEmpty()) {
+                Uri imageUri = Uri.parse(mRecipe.getImage());
                 this.recipeImageView.setImageURI(imageUri);
             } else {
                 this.recipeImageView.setVisibility(View.GONE);

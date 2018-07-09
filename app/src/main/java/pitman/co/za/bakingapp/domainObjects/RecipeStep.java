@@ -2,6 +2,7 @@ package pitman.co.za.bakingapp.domainObjects;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -13,28 +14,34 @@ import android.support.annotation.NonNull;
  * https://developer.android.com/training/data-storage/room/defining-data
  */
 @Entity(tableName = "recipe_step",
-        primaryKeys = {"parentRecipe", "stepNumber"},
+        primaryKeys = {"parentRecipe", "id"},
         foreignKeys = @ForeignKey(
                 entity = Recipe.class,
-                parentColumns = "recipeName",
+                parentColumns = "name",
                 childColumns = "parentRecipe"))
 public class RecipeStep implements Parcelable {
 
     @NonNull
     private String parentRecipe;
     private String shortDescription;
-    private int stepNumber;
+    private int id;
     private String description;
     private String videoUrl;
     private String thumbnailUrl;
 
-    public RecipeStep(@NonNull String parentRecipe, String shortDescription, int stepNumber, String description, String videoUrl, String thumbnailUrl) {
-        this.parentRecipe = parentRecipe;
+    public RecipeStep(String shortDescription, int id, String description, String videoUrl, String thumbnailUrl) {
         this.shortDescription = shortDescription;
-        this.stepNumber = stepNumber;
+        this.id = id;
         this.description = description;
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
+    }
+
+    @Ignore
+    public RecipeStep() {}
+
+    public void setParentRecipe(@NonNull String parentRecipe) {
+        this.parentRecipe = parentRecipe;
     }
 
     @NonNull
@@ -46,8 +53,8 @@ public class RecipeStep implements Parcelable {
         return shortDescription;
     }
 
-    public int getStepNumber() {
-        return stepNumber;
+    public int getId() {
+        return id;
     }
 
     public String getDescription() {
@@ -71,20 +78,16 @@ public class RecipeStep implements Parcelable {
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeString(this.parentRecipe);
         parcel.writeString(this.shortDescription);
-        parcel.writeInt(this.stepNumber);
+        parcel.writeInt(this.id);
         parcel.writeString(this.description);
         parcel.writeString(this.videoUrl);
         parcel.writeString(this.thumbnailUrl);
     }
 
-//    public RecipeStep() {
-//    }
-
-//    protected RecipeStep(Parcel in) {
     public RecipeStep(Parcel in) {
         this.parentRecipe = in.readString();
         this.shortDescription = in.readString();
-        this.stepNumber = in.readInt();
+        this.id = in.readInt();
         this.description = in.readString();
         this.videoUrl = in.readString();
         this.thumbnailUrl = in.readString();

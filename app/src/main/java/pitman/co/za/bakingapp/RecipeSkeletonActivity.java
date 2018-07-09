@@ -43,7 +43,7 @@ public class RecipeSkeletonActivity extends AppCompatActivity implements RecipeS
             Intent intent = getIntent();
             mIsTablet = intent.getBooleanExtra("isTablet", false);
             selectedRecipe = intent.getParcelableExtra("selectedRecipe");
-            Log.d(LOG_TAG, "selected RecipeName " + selectedRecipe.getRecipeName());
+            Log.d(LOG_TAG, "selected RecipeName " + selectedRecipe.getName());
         }
 
         setContentView(R.layout.activity_recipe_skeleton);

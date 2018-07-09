@@ -40,8 +40,8 @@ public class RecipeRepository {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                recipe.setRecipeSteps((ArrayList<RecipeStep>) mRecipeDao.getRecipeSteps(recipe.getRecipeName()));
-                recipe.setIngredients((ArrayList<Ingredient>) mRecipeDao.getRecipeIngredients(recipe.getRecipeName()));
+                recipe.setSteps((ArrayList<RecipeStep>) mRecipeDao.getRecipeSteps(recipe.getName()));
+                recipe.setIngredients((ArrayList<Ingredient>) mRecipeDao.getRecipeIngredients(recipe.getName()));
             }
         }).start();
     }
@@ -64,9 +64,9 @@ public class RecipeRepository {
         protected Void doInBackground(final Recipe... params) throws SQLiteConstraintException {
             Recipe recipe = params[0];
             // Only add recipe if it isn't already in the database (recipe name used as unique primary key)
-            if (mAsyncTaskDao.getRecipe(recipe.getRecipeName()) == null) {
+            if (mAsyncTaskDao.getRecipe(recipe.getName()) == null) {
                 mAsyncTaskDao.saveRecipe(recipe);
-                mAsyncTaskDao.saveRecipeSteps(recipe.getRecipeSteps());
+                mAsyncTaskDao.saveRecipeSteps(recipe.getSteps());
                 mAsyncTaskDao.saveIngredients(recipe.getIngredients());
             }
             return null;

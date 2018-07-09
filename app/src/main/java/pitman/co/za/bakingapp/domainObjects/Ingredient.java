@@ -2,6 +2,7 @@ package pitman.co.za.bakingapp.domainObjects;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -13,7 +14,7 @@ import android.support.annotation.NonNull;
         primaryKeys = {"parentRecipe", "ingredient"},
         foreignKeys = @ForeignKey(
                 entity = Recipe.class,
-                parentColumns = "recipeName",
+                parentColumns = "name",
                 childColumns = "parentRecipe"))
 public class Ingredient implements Parcelable {
 
@@ -24,11 +25,17 @@ public class Ingredient implements Parcelable {
     private String quantity;
     private String measure;
 
-    public Ingredient(@NonNull String parentRecipe, String quantity, String measure, @NonNull String ingredient) {
-        this.parentRecipe = parentRecipe;
+    public Ingredient(String quantity, String measure, @NonNull String ingredient) {
         this.quantity = quantity;
         this.measure = measure;
         this.ingredient = ingredient;
+    }
+
+    @Ignore
+    public Ingredient() {}
+
+    public void setParentRecipe(@NonNull String parentRecipe) {
+        this.parentRecipe = parentRecipe;
     }
 
     @NonNull

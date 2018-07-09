@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityFragm
         updateWidgetIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
         SharedPreferences sharedPreferences = this.getSharedPreferences("pitman.co.za.bakingapp", Context.MODE_PRIVATE);
-        sharedPreferences.edit().putString("selectedRecipe", recipe.getRecipeName()).apply();
+        sharedPreferences.edit().putString("selectedRecipe", recipe.getName()).apply();
 
         this.sendBroadcast(updateWidgetIntent);
     }

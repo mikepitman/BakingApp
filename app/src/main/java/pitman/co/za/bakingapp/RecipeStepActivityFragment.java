@@ -116,7 +116,7 @@ public class RecipeStepActivityFragment extends Fragment {
         // if user selects 'Ingredients' tab, mRecipeStepIndex may == -1, so set to 0
         mRecipeStepIndex = (mRecipeStepIndex < 0 ? 0 : mRecipeStepIndex);
 
-        RecipeStep selectedStep = mSelectedRecipe.getRecipeSteps().get(mRecipeStepIndex);
+        RecipeStep selectedStep = mSelectedRecipe.getSteps().get(mRecipeStepIndex);
         Log.d(LOG_TAG, "selectedRecipe is null? " + (mSelectedRecipe == null) + ". Selected step ID: " + mRecipeStepIndex);
         Log.d(LOG_TAG, "" + selectedStep.getShortDescription() + " .:. " + selectedStep.getVideoUrl());
 
@@ -163,7 +163,7 @@ public class RecipeStepActivityFragment extends Fragment {
         }
 
         Button nextButton = (Button) rootView.findViewById(R.id.nextStepButton);
-        int numberOfSteps = mSelectedRecipe.getRecipeSteps().size() - 1;
+        int numberOfSteps = mSelectedRecipe.getSteps().size() - 1;
         if (mRecipeStepIndex == numberOfSteps || isTablet) {      // Last recipe step - button should not be displayed
             nextButton.setVisibility(View.GONE);
         } else {

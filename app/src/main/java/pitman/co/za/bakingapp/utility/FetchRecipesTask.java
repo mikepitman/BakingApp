@@ -4,9 +4,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParseException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,11 +15,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import pitman.co.za.bakingapp.MainActivityFragment;
 import pitman.co.za.bakingapp.domainObjects.Ingredient;
 import pitman.co.za.bakingapp.domainObjects.Recipe;
 import pitman.co.za.bakingapp.domainObjects.RecipeStep;
+import pitman.co.za.bakingapp.jsonDeserialisation.IngredientDeserialiser;
+import pitman.co.za.bakingapp.jsonDeserialisation.RecipeDeserialiser;
+import pitman.co.za.bakingapp.jsonDeserialisation.StepDeserialiser;
 
 /**
  * Created by Michael on 2018/02/07.
@@ -114,8 +118,8 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
 
         try {
             recipesArray = parseRecipesFromJson(recipeListing);
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "JSONException caught: " + e.getMessage());
+        } catch (JsonParseException e) {
+            Log.e(LOG_TAG, "JsonParseException caught: " + e.getMessage());
         }
 
         return recipesArray;
@@ -123,79 +127,20 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
 
     /**
      * Parse returned JSON-encoded movie data and populate objects.
-     * Based on Udacity-supplied JSON gist from Developing Android Apps: Fundamentals 'Project Sunshine' app
+     * Reviewer suggested using library (GSON) for parsing input. Resources referenced:
+     * https://github.com/google/gson
+     * http://www.javacreed.com/gson-deserialiser-example/
      */
-    private ArrayList<Recipe> parseRecipesFromJson(String jsonRecipes)
-            throws JSONException {
+    private ArrayList<Recipe> parseRecipesFromJson(String jsonRecipes) throws JsonParseException {
 
-        // These are the names of the JSON objects that need to be extracted.
-        final String JSON_RECIPE_ID = "id";
-        final String JSON_RECIPE_NAME = "name";
-        final String JSON_RECIPE_STEPS_ARRAY = "steps";
-        final String JSON_RECIPE_INGREDIENTS_ARRAY = "ingredients";
-        final String JSON_RECIPE_SERVINGS = "servings";
-        final String JSON_RECIPE_IMAGE = "image";
+        final GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Recipe.class, new RecipeDeserialiser());
+        builder.registerTypeAdapter(RecipeStep.class, new StepDeserialiser());
+        builder.registerTypeAdapter(Ingredient.class, new IngredientDeserialiser());
+        Gson gson = builder.create();
 
-        final String JSON_INGREDIENT_QUANTITY = "quantity";
-        final String JSON_INGREDIENT_MEASURE = "measure";
-        final String JSON_INGREDIENT_INGREDIENT = "ingredient";
+        Recipe[] parsedRecipesArray = gson.fromJson(jsonRecipes, Recipe[].class);
 
-        final String JSON_STEP_ID = "id";
-        final String JSON_STEP_SHORT_DESC = "shortDescription";
-        final String JSON_STEP_DESCRIPTION = "description";
-        final String JSON_STEP_VIDEO_URL = "videoURL";
-        final String JSON_STEP_THUMBNAIL_URL = "thumbnailURL";
-
-        JSONArray recipesArray = new JSONArray(jsonRecipes);
-
-        ArrayList<Recipe> parsedRecipes = new ArrayList<>();
-        for (int i = 0; i < recipesArray.length(); i++) {
-
-            JSONObject recipe_obj = recipesArray.getJSONObject(i);
-            Recipe recipe = new Recipe(
-                    recipe_obj.getString(JSON_RECIPE_ID),
-                    recipe_obj.getString(JSON_RECIPE_NAME),
-                    recipe_obj.getString(JSON_RECIPE_SERVINGS),
-                    recipe_obj.getString(JSON_RECIPE_IMAGE));
-
-
-            JSONArray ingredientsArray = recipe_obj.getJSONArray(JSON_RECIPE_INGREDIENTS_ARRAY);
-            if (ingredientsArray != null) {
-                ArrayList<Ingredient> ingredientArrayList = new ArrayList<>();
-
-                for (int j = 0; j < ingredientsArray.length(); j++) {
-                    JSONObject ingredient_obj = ingredientsArray.getJSONObject(j);
-                    Ingredient ingredient = new Ingredient(
-                            recipe.getRecipeName(),
-                            ingredient_obj.getString(JSON_INGREDIENT_QUANTITY),
-                            ingredient_obj.getString(JSON_INGREDIENT_MEASURE),
-                            ingredient_obj.getString(JSON_INGREDIENT_INGREDIENT));
-                    ingredientArrayList.add(ingredient);
-                }
-                recipe.setIngredients(ingredientArrayList);
-            }
-
-            JSONArray recipeStepsArray = recipe_obj.getJSONArray(JSON_RECIPE_STEPS_ARRAY);
-            if (recipeStepsArray != null) {
-                ArrayList<RecipeStep> stepArrayList = new ArrayList<>();
-
-                for (int k = 0; k < recipeStepsArray.length(); k++) {
-                    JSONObject recipeStep_obj = recipeStepsArray.getJSONObject(k);
-                    RecipeStep recipeStep = new RecipeStep(
-                            recipe.getRecipeName(),
-                            recipeStep_obj.getString(JSON_STEP_SHORT_DESC),
-                            Integer.getInteger(recipeStep_obj.getString(JSON_STEP_ID), k),
-                            recipeStep_obj.getString(JSON_STEP_DESCRIPTION),
-                            recipeStep_obj.getString(JSON_STEP_VIDEO_URL),
-                            recipeStep_obj.getString(JSON_STEP_THUMBNAIL_URL));
-
-                    stepArrayList.add(recipeStep);
-                }
-                recipe.setRecipeSteps(stepArrayList);
-            }
-            parsedRecipes.add(recipe);
-        }
-
-        return parsedRecipes;
+        return new ArrayList<>(Arrays.asList(parsedRecipesArray));
     }
 }

@@ -26,15 +26,15 @@ public interface RecipeDao {
     void saveRecipeSteps(List<RecipeStep> recipeStep);
 
     @Transaction
-    @Query("select * from Recipe order by recipeName")
+    @Query("select * from Recipe order by name")
     LiveData<List<Recipe>> getAllRecipes();
 
-    @Query("select * from Recipe where recipeName = :recipeName")
+    @Query("select * from Recipe where name = :recipeName")
     Recipe getRecipe(String recipeName);
 
     @Query("select * from recipe_ingredient where parentRecipe = :parentRecipe")
     List<Ingredient> getRecipeIngredients(String parentRecipe);
 
-    @Query("select * from recipe_step where parentRecipe = :parentRecipe order by stepNumber")
+    @Query("select * from recipe_step where parentRecipe = :parentRecipe order by id")
     List<RecipeStep> getRecipeSteps(String parentRecipe);
 }

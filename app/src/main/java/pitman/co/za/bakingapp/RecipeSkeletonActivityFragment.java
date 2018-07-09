@@ -85,7 +85,7 @@ public class RecipeSkeletonActivityFragment extends Fragment {
         recipeSkeletonAdapter.clear();
 
         recipeSkeletonAdapter.add("Ingredients");
-        for (RecipeStep step : selectedRecipe.getRecipeSteps()) {
+        for (RecipeStep step : selectedRecipe.getSteps()) {
             String recipeCardText = step.getShortDescription();
             recipeSkeletonAdapter.add(recipeCardText);
         }
