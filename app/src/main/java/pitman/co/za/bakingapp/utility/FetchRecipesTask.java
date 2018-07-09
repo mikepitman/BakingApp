@@ -116,6 +116,7 @@ public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>>
             Log.d(LOG_TAG, "recipeListing string is empty");
         }
 
+        // Deserialise the json recipe information into Java objects
         try {
             recipesArray = parseRecipesFromJson(recipeListing);
         } catch (JsonParseException e) {
