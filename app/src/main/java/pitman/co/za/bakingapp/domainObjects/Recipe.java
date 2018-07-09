@@ -96,8 +96,6 @@ public class Recipe implements Parcelable {
         parcel.writeList(steps);
     }
 
-//    public Recipe() {}
-
     protected Recipe(Parcel in) {
         this.id = in.readString();
         this.name = in.readString();

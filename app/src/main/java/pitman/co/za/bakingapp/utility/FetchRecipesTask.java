@@ -27,6 +27,7 @@ import pitman.co.za.bakingapp.jsonDeserialisation.StepDeserialiser;
 
 /**
  * Created by Michael on 2018/02/07.
+ * Deprecated by move to using Volley for network queries, but not removing this just yet.
  */
 
 public class FetchRecipesTask extends AsyncTask<String, Void, ArrayList<Recipe>> {

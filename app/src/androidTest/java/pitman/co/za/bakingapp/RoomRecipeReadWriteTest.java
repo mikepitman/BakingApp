@@ -49,7 +49,8 @@ public class RoomRecipeReadWriteTest {
         mRecipeDao.saveRecipe(recipe);
 
         Recipe recipeByName = mRecipeDao.getRecipe("Test Recipe");
-        assertThat(recipeByName, equalTo(recipe));
+        assertThat(recipeByName.getId(), equalTo(recipe.getId()));
+        assertThat(recipeByName.getServings(), equalTo(recipe.getServings()));
     }
 
     private Recipe getRecipe() {
