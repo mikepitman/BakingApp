@@ -21,7 +21,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.is;
 
 @RunWith(AndroidJUnit4.class)
@@ -42,10 +41,8 @@ public class Espresso_AppHierarchyNavigationTest {
         // Click on first menu item, to view recipe skeleton
         onView(withId(R.id.recipe_cards_rv)).perform(actionOnItemAtPosition(0, click()));
 
-        onData(anything())
-                .inAdapterView(withId(R.id.recipe_skeleton_list))
-                .atPosition(0)
-                .check(matches(withText("Ingredients")));
+        // Updated with the change to a recyclerView in the RecipeSkeleton
+        onData(is("Ingredients")).inAdapterView(withId(R.id.recipe_skeleton_rv));
 
         // Press backButton to return to MainActivity
         Espresso.pressBack();
@@ -58,26 +55,17 @@ public class Espresso_AppHierarchyNavigationTest {
         // Click on first menu item, to view recipe skeleton
         onView(withId(R.id.recipe_cards_rv)).perform(actionOnItemAtPosition(0, click()));
 
-        onData(anything())
-                .inAdapterView(withId(R.id.recipe_skeleton_list))
-                .atPosition(0)
-                .check(matches(withText("Ingredients")));
+        onData(is("Ingredients")).inAdapterView(withId(R.id.recipe_skeleton_rv));
 
         // Click on first item in list (always 'Ingredients')
-        onData(anything())
-                .inAdapterView(withId(R.id.recipe_skeleton_list))
-                .atPosition(0)
-                .perform(click());
+        onView(withId(R.id.recipe_skeleton_rv)).perform(actionOnItemAtPosition(0, click()));
 
         // Verify ingredients list is displayed
         onData(is("semisweet chocolate chips")).inAdapterView(withId(R.id.ingredients_list));
 
         // Return to recipe skeleton
         Espresso.pressBack();
-        onData(anything())
-                .inAdapterView(withId(R.id.recipe_skeleton_list))
-                .atPosition(0)
-                .check(matches(withText("Ingredients")));
+        onData(is("Ingredients")).inAdapterView(withId(R.id.recipe_skeleton_rv));
 
         // Press backButton to return to Recipe menu
         Espresso.pressBack();
@@ -90,16 +78,10 @@ public class Espresso_AppHierarchyNavigationTest {
         // Click on first menu item, to view recipe skeleton
         onView(withId(R.id.recipe_cards_rv)).perform(actionOnItemAtPosition(0, click()));
 
-        onData(anything())
-                .inAdapterView(withId(R.id.recipe_skeleton_list))
-                .atPosition(1)
-                .check(matches(withText("Recipe Introduction")));
+        onData(is("Recipe Introduction")).inAdapterView(withId(R.id.recipe_skeleton_rv));
 
         // Click on second item in skeletonView, to view recipeStep
-        onData(anything())
-                .inAdapterView(withId(R.id.recipe_skeleton_list))
-                .atPosition(1)
-                .perform(click());
+        onView(withId(R.id.recipe_skeleton_rv)).perform(actionOnItemAtPosition(1, click()));
 
         // Verify RecipeStep is displayed
         onView(allOf(getElementByPosition(allOf(withId(R.id.nextStepButton)), 0), isClickable()));
@@ -110,10 +92,7 @@ public class Espresso_AppHierarchyNavigationTest {
 
         // Return to recipe skeleton
         Espresso.pressBack();
-        onData(anything())
-                .inAdapterView(withId(R.id.recipe_skeleton_list))
-                .atPosition(1)
-                .check(matches(withText("Recipe Introduction")));
+        onData(is("Recipe Introduction")).inAdapterView(withId(R.id.recipe_skeleton_rv));
 
         // Press backButton to return to Recipe menu
         Espresso.pressBack();
