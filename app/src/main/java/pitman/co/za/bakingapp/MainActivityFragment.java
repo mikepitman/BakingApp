@@ -79,7 +79,6 @@ public class MainActivityFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.setHasOptionsMenu(true);
         Log.d(LOG_TAG, "2. onCreate()");
 
         // https://codelabs.developers.google.com/codelabs/android-room-with-a-view/#13
@@ -150,7 +149,8 @@ public class MainActivityFragment extends Fragment {
         return connectivity;
     }
 
-    // called from async FetchRecipesTask that retrieves recipe data from internet, to populate adapter
+    // previously called from async FetchRecipesTask that retrieves recipe data from internet, to populate adapter
+    // now called from queryNetworkForRecipes()
     public void generateRecipeAdapterWithData(ArrayList<Recipe> retrievedRecipes) {
         if (retrievedRecipes != null) {
             mRecipeViewModel.insert(retrievedRecipes);

@@ -39,6 +39,12 @@ import pitman.co.za.bakingapp.domainObjects.RecipeStep;
 
 public class RecipeStepActivityFragment extends Fragment {
 
+    private static final String SELECTED_RECIPE = "selectedRecipe";
+    private static final String SELECTED_STEP = "selectedStep";
+    private static final String IS_TABLET = "isTablet";
+    private static final String CURRENT_POSITION = "currentPosition";
+    private static final String PLAY_WHEN_READY = "playWhenReady";
+
     private static String LOG_TAG = RecipeStepActivityFragment.class.getSimpleName();
     private View rootView;
     private Recipe mSelectedRecipe;
@@ -47,13 +53,11 @@ public class RecipeStepActivityFragment extends Fragment {
     private SimpleExoPlayerView mPlayerView;
     private long playerCurrentPosition = 0;
     private long playerStoppedPosition = 0;
-    private boolean currentlyPlaying = false;
+    private boolean playWhenReady = true;
     private boolean isTablet = false;
     private RecipeStepActivityFragment.Callbacks mCallbacks;
 
-    public RecipeStepActivityFragment() {
-        Log.d(LOG_TAG, "RecipeStepActivityFragment constructor called");
-    }
+    public RecipeStepActivityFragment() {}
 
     //// Callbacks-related code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public interface Callbacks {
@@ -74,27 +78,28 @@ public class RecipeStepActivityFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("selectedRecipe", mSelectedRecipe);
-        outState.putInt("selectedStep", mRecipeStepIndex);
-        outState.putLong("currentPosition", mExoPlayer.getCurrentPosition());
-        outState.putBoolean("isTablet", isTablet);
+        outState.putParcelable(SELECTED_RECIPE, mSelectedRecipe);
+        outState.putInt(SELECTED_STEP, mRecipeStepIndex);
+        outState.putBoolean(IS_TABLET, isTablet);
+        if (mExoPlayer != null) {
+            outState.putLong(CURRENT_POSITION, mExoPlayer.getCurrentPosition());
+            outState.putBoolean(PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(LOG_TAG, "3. onCreateView()");
 
         rootView = inflater.inflate(R.layout.fragment_recipe_step, container, false);
-        Log.d(LOG_TAG, "onCreateView() in RecipeStepActivityFragment called");
 
         if (savedInstanceState != null) {
-            mSelectedRecipe = savedInstanceState.getParcelable("selectedRecipe");
-            mRecipeStepIndex = savedInstanceState.getInt("selectedStep", 0);
-            playerCurrentPosition = savedInstanceState.getLong("currentPosition");
-            isTablet = savedInstanceState.getBoolean("isTablet");
-
-            Log.d(LOG_TAG, "recipe retrieved from savedInstanceState");
+            mSelectedRecipe = savedInstanceState.getParcelable(SELECTED_RECIPE);
+            mRecipeStepIndex = savedInstanceState.getInt(SELECTED_STEP, 0);
+            isTablet = savedInstanceState.getBoolean(IS_TABLET);
+            // These values only saved when mExoPlayer != null, ie there is a video to play, so default values don't affect anything
+            playerCurrentPosition = savedInstanceState.getLong(CURRENT_POSITION);
+            playWhenReady = savedInstanceState.getBoolean(PLAY_WHEN_READY);
 
             // Fragment instantiated from RecipeSkeletonActivity, in master-detail layout
         } else if (this.getArguments() != null) {
@@ -116,9 +121,38 @@ public class RecipeStepActivityFragment extends Fragment {
         // if user selects 'Ingredients' tab, mRecipeStepIndex may == -1, so set to 0
         mRecipeStepIndex = (mRecipeStepIndex < 0 ? 0 : mRecipeStepIndex);
 
+        createMediaPlayer();
+
+        Button backButton = (Button) rootView.findViewById(R.id.previousStepButton);
+        if (mRecipeStepIndex == 0 || isTablet) {            // First step - button should not be displayed
+            backButton.setVisibility(View.GONE);
+        } else {
+            backButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    Log.d(LOG_TAG, "BackButton pressed");
+                    mCallbacks.onRecipeStepChange(mSelectedRecipe, mRecipeStepIndex - 1);
+                }
+            });
+        }
+
+        Button nextButton = (Button) rootView.findViewById(R.id.nextStepButton);
+        int numberOfSteps = mSelectedRecipe.getSteps().size() - 1;
+        if (mRecipeStepIndex == numberOfSteps || isTablet) {      // Last recipe step - button should not be displayed
+            nextButton.setVisibility(View.GONE);
+        } else {
+            nextButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    Log.d(LOG_TAG, "nextButton pressed");
+                    mCallbacks.onRecipeStepChange(mSelectedRecipe, mRecipeStepIndex + 1);
+                }
+            });
+        }
+
+        return rootView;
+    }
+
+    private void createMediaPlayer() {
         RecipeStep selectedStep = mSelectedRecipe.getSteps().get(mRecipeStepIndex);
-        Log.d(LOG_TAG, "selectedRecipe is null? " + (mSelectedRecipe == null) + ". Selected step ID: " + mRecipeStepIndex);
-        Log.d(LOG_TAG, "" + selectedStep.getShortDescription() + " .:. " + selectedStep.getVideoUrl());
 
         TextView longDescriptionView = (TextView) rootView.findViewById(R.id.recipe_instructions);
         longDescriptionView.setText(selectedStep.getDescription());
@@ -150,37 +184,6 @@ public class RecipeStepActivityFragment extends Fragment {
             }
         }
 
-        Button backButton = (Button) rootView.findViewById(R.id.previousStepButton);
-        if (mRecipeStepIndex == 0 || isTablet) {            // First step - button should not be displayed
-            backButton.setVisibility(View.GONE);
-        } else {
-            backButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    Log.d(LOG_TAG, "BackButton pressed");
-                    mCallbacks.onRecipeStepChange(mSelectedRecipe, mRecipeStepIndex - 1);
-                }
-            });
-        }
-
-        Button nextButton = (Button) rootView.findViewById(R.id.nextStepButton);
-        int numberOfSteps = mSelectedRecipe.getSteps().size() - 1;
-        if (mRecipeStepIndex == numberOfSteps || isTablet) {      // Last recipe step - button should not be displayed
-            nextButton.setVisibility(View.GONE);
-        } else {
-            nextButton.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    Log.d(LOG_TAG, "nextButton pressed");
-                    mCallbacks.onRecipeStepChange(mSelectedRecipe, mRecipeStepIndex + 1);
-                }
-            });
-        }
-
-        return rootView;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     /**
@@ -199,18 +202,24 @@ public class RecipeStepActivityFragment extends Fragment {
             MediaSource mediaSource = new ExtractorMediaSource(mediaUri, new DefaultDataSourceFactory(getContext(), userAgent),
                     new DefaultExtractorsFactory(), null, null);
             mExoPlayer.prepare(mediaSource);
-            mExoPlayer.setPlayWhenReady(true);
+
             // Start video playback at the correct location if device is rotated, or fragment navigated away from
-            if (playerCurrentPosition != 0 && !currentlyPlaying) {
+            if (playerCurrentPosition != 0 && playWhenReady) {
                 mExoPlayer.seekTo(playerCurrentPosition);
             } else {
                 mExoPlayer.seekTo(playerStoppedPosition);
             }
+            mExoPlayer.setPlayWhenReady(playWhenReady);
         }
     }
 
     private void releasePlayer() {
         if (mExoPlayer != null) {
+            // https://github.com/google/ExoPlayer/blob/release-v2/demos/main/src/main/java/com/google/android/exoplayer2/demo/PlayerActivity.java
+            // To ensure that the video starts again at the point it left off
+            playWhenReady = mExoPlayer.getPlayWhenReady();
+            playerCurrentPosition = mExoPlayer.getCurrentPosition();
+
             mExoPlayer.stop();
             mExoPlayer.release();
             mExoPlayer = null;
@@ -240,6 +249,19 @@ public class RecipeStepActivityFragment extends Fragment {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  Fragment end-of-lifecycle methods - stop/tear-down media player components ///////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mExoPlayer == null) {
+            createMediaPlayer();
+        }
+    }
 
     @Override
     public void onStop() {
