@@ -55,6 +55,7 @@ public class MainActivityFragment extends Fragment {
     private RecyclerView mRecipeRecyclerView;
     private Callbacks mCallbacks;
     private RecipeViewModel mRecipeViewModel;
+    private boolean recipesUpdated = false;
     public static RecipeCardAdapter mAdapter;
 
     public MainActivityFragment() {
@@ -75,6 +76,12 @@ public class MainActivityFragment extends Fragment {
         mCallbacks = null;
     }
     //// Callbacks-related code //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("recipesUpdated", recipesUpdated);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +113,10 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(LOG_TAG, "3. onCreateView()");
 
+        if (savedInstanceState != null) {
+            recipesUpdated = savedInstanceState.getBoolean("recipesUpdated");
+        }
+
         // Get bundle arguments from MainActivity
         boolean isTablet = false;
         Bundle arguments = this.getArguments();
@@ -118,11 +129,13 @@ public class MainActivityFragment extends Fragment {
         mRecipeRecyclerView.setLayoutManager(isTablet ? new GridLayoutManager(getActivity(), 2) : new LinearLayoutManager(getActivity()));
         mRecipeRecyclerView.setAdapter(mAdapter);
 
-        if (isNetworkAvailable()) {
+        if (!recipesUpdated) {
+            if (isNetworkAvailable()) {
 //            new FetchRecipesTask(this).execute();     // deprecated by change to Volley for network requests
-            queryNetworkForRecipes();
-        } else {
-            appMessageToast("No network connection available! Displaying recipes from memory.");
+                queryNetworkForRecipes();
+            } else {
+                appMessageToast("No network connection available! Displaying recipes from memory.");
+            }
         }
         return view;
     }
@@ -323,6 +336,7 @@ public class MainActivityFragment extends Fragment {
                         // Deserialise the json recipe information into Java objects
                         try {
                             generateRecipeAdapterWithData(parseRecipesFromJson(response));
+                            recipesUpdated = true;
                         } catch (JsonParseException e) {
                             Log.e(LOG_TAG, "JsonParseException caught: " + e.getMessage());
                         }
